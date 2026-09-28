@@ -117,37 +117,53 @@
       <main class="page hidden" id="settingsPage">
         <section class="settings-panel glass-panel">
           <div class="settings-block">
-            <h3>Настройки</h3>
-            <div class="settings-row compact-row">
-              <button class="mode-btn active" data-lang="ru" type="button">RU</button>
-              <button class="mode-btn" data-lang="en" type="button">EN</button>
+            <h3>Язык</h3>
+            <div class="option-group">
+              <button class="lang-toggle active" data-lang="ru" type="button">
+                <span class="flag">🇷🇺</span>
+                <span>Русский</span>
+              </button>
+              <button class="lang-toggle" data-lang="en" type="button">
+                <span class="flag">🇬🇧</span>
+                <span>English</span>
+              </button>
             </div>
           </div>
 
           <div class="settings-block">
-            <div class="settings-row compact-row">
-              <button class="mode-btn active" data-theme="light" type="button">Светлая</button>
-              <button class="mode-btn" data-theme="dark" type="button">Тёмная</button>
+            <h3>Тема</h3>
+            <div class="option-group">
+              <button class="theme-toggle active" data-theme="light" type="button">
+                <span>☀️</span>
+                <span>Светлая</span>
+              </button>
+              <button class="theme-toggle" data-theme="dark" type="button">
+                <span>🌙</span>
+                <span>Тёмная</span>
+              </button>
             </div>
           </div>
 
           <div class="settings-block">
-            <h3>Параметры</h3>
-            <div class="settings-fields">
-              <label class="field">
-                <span>Ставка за час</span>
-                <input type="number" id="hourRate" min="0" step="1" placeholder="300" />
-              </label>
-            </div>
+            <button id="openTermsBtn" class="terms-btn" type="button">📄 Пользовательское соглашение</button>
           </div>
         </section>
       </main>
     </div>
 
     <nav class="bottom-nav" aria-label="Нижняя навигация">
-      <button class="bottom-nav-link active" data-page="main" type="button">Главная</button>
-      <button class="bottom-nav-link" data-page="reports" type="button">Отчёты</button>
-      <button class="bottom-nav-link" data-page="settings" type="button">Настройки</button>
+      <button class="bottom-nav-link active" data-page="main" type="button" title="Главная">
+        <span class="nav-icon">🏠</span>
+        <span class="nav-label">Главная</span>
+      </button>
+      <button class="bottom-nav-link" data-page="reports" type="button" title="Отчёты">
+        <span class="nav-icon">📊</span>
+        <span class="nav-label">Отчёты</span>
+      </button>
+      <button class="bottom-nav-link" data-page="settings" type="button" title="Настройки">
+        <span class="nav-icon">⚙️</span>
+        <span class="nav-label">Настройки</span>
+      </button>
     </nav>
 
     <div id="shiftModal" class="modal hidden" aria-hidden="true">
@@ -183,6 +199,23 @@
             <button type="submit" class="primary-btn">Сохранить</button>
           </div>
         </form>
+      </div>
+    </div>
+
+    <div id="termsModal" class="modal hidden" aria-hidden="true">
+      <div class="modal-card glass-panel terms-card">
+        <div class="modal-header">
+          <h3>Пользовательское соглашение</h3>
+          <button class="close-btn" id="closeTermsBtn" aria-label="Закрыть">×</button>
+        </div>
+        <div class="terms-content">
+          <p>
+            Настоящее приложение предназначено для учета рабочих смен, расчета часов и дохода. Пользователь несет полную ответственность за точность введённых данных. Разработчик не несёт ответственности за потерю данных. Все данные хранятся локально в браузере пользователя.
+          </p>
+          <p>
+            При использовании приложения вы соглашаетесь с условиями данного соглашения.
+          </p>
+        </div>
       </div>
     </div>
 
