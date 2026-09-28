@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shift Flow — Отчеты</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="brand">
+          <div class="logo">SF</div>
+          <div>
+            <h1 data-i18n="brand">Shift Flow</h1>
+            <small data-i18n="tagline">Track your shifts, control your income</small>
+          </div>
+        </div>
+
+        <nav class="nav">
+          <a href="index.html" class="nav-link" data-i18n="nav_home">Главная</a>
+          <a href="reports.html" class="nav-link active" data-i18n="nav_reports">Отчеты</a>
+          <a href="settings.html" class="nav-link" data-i18n="nav_settings">Настройки</a>
+        </nav>
+      </header>
+
+      <main class="page">
+        <section class="report-header">
+          <button id="reportPrevMonth" class="icon-btn" aria-label="Previous month">‹</button>
+          <h2 id="reportMonthLabel">Месяц</h2>
+          <button id="reportNextMonth" class="icon-btn" aria-label="Next month">›</button>
+        </section>
+
+        <section id="reportSummary" class="report-summary"></section>
+      </main>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>

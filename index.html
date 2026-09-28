@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shift Flow</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="brand">
+          <div class="logo">SF</div>
+          <div>
+            <h1 data-i18n="brand">Shift Flow</h1>
+            <small data-i18n="tagline">Track your shifts, control your income</small>
+          </div>
+        </div>
+
+        <nav class="nav">
+          <a href="index.html" class="nav-link active" data-i18n="nav_home">Главная</a>
+          <a href="reports.html" class="nav-link" data-i18n="nav_reports">Отчеты</a>
+          <a href="settings.html" class="nav-link" data-i18n="nav_settings">Настройки</a>
+        </nav>
+      </header>
+
+      <main class="page">
+        <section class="calendar-panel">
+          <div class="calendar-header">
+            <button id="prevMonth" class="icon-btn" aria-label="Previous month">‹</button>
+            <h2 id="monthLabel">Месяц</h2>
+            <button id="nextMonth" class="icon-btn" aria-label="Next month">›</button>
+          </div>
+
+          <div class="calendar-weekdays">
+            <span>Пн</span>
+            <span>Вт</span>
+            <span>Ср</span>
+            <span>Чт</span>
+            <span>Пт</span>
+            <span>Сб</span>
+            <span>Вс</span>
+          </div>
+
+          <div id="calendarGrid" class="calendar-grid"></div>
+        </section>
+
+        <section class="stats">
+          <div class="stat-card">
+            <span class="stat-label" data-i18n="total_hours">Часы</span>
+            <strong id="totalHours">0</strong>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label" data-i18n="total_shifts">Смены</span>
+            <strong id="totalShifts">0</strong>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label" data-i18n="total_income">Доход</span>
+            <strong id="totalIncome">0 ₽</strong>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div id="shiftModal" class="modal hidden" aria-hidden="true">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h3 id="modalDateLabel">Дата</h3>
+          <button class="close-btn" id="closeModalBtn" aria-label="Close">×</button>
+        </div>
+
+        <form id="shiftForm">
+          <label>
+            <span data-i18n="shift_name">Наименование смены</span>
+            <input type="text" id="shiftName" placeholder="Ночная смена" />
+          </label>
+
+          <label>
+            <span data-i18n="shift_hours">Количество часов</span>
+            <input type="number" id="shiftHours" min="0" step="0.5" />
+          </label>
+
+          <label>
+            <span data-i18n="shift_income">Доход</span>
+            <input type="number" id="shiftIncome" min="0" step="1" />
+          </label>
+
+          <label class="checkbox-row">
+            <input type="checkbox" id="isWeekend" />
+            <span data-i18n="weekend_day">Выходной день</span>
+          </label>
+
+          <div class="modal-actions">
+            <button type="button" id="deleteShiftBtn" class="danger-btn hidden" data-i18n="delete_shift">Удалить смену</button>
+            <button type="submit" class="primary-btn" data-i18n="save">Сохранить</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>

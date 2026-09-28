@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shift Flow — Настройки</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="brand">
+          <div class="logo">SF</div>
+          <div>
+            <h1 data-i18n="brand">Shift Flow</h1>
+            <small data-i18n="tagline">Track your shifts, control your income</small>
+          </div>
+        </div>
+
+        <nav class="nav">
+          <a href="index.html" class="nav-link" data-i18n="nav_home">Главная</a>
+          <a href="reports.html" class="nav-link" data-i18n="nav_reports">Отчеты</a>
+          <a href="settings.html" class="nav-link active" data-i18n="nav_settings">Настройки</a>
+        </nav>
+      </header>
+
+      <main class="page settings-page">
+        <section class="settings-card">
+          <h2 data-i18n="language">Язык</h2>
+          <div class="option-group">
+            <button class="lang-btn active" data-lang="ru">
+              <span class="flag">🇷🇺</span>
+              <span>Русский</span>
+            </button>
+            <button class="lang-btn" data-lang="en">
+              <span class="flag">🇬🇧</span>
+              <span>English</span>
+            </button>
+          </div>
+        </section>
+
+        <section class="settings-card">
+          <h2 data-i18n="theme">Тема</h2>
+          <div class="option-group">
+            <button class="theme-btn active" data-theme="light">
+              <span>☀️</span>
+              <span data-i18n="theme_light">Светлая</span>
+            </button>
+            <button class="theme-btn" data-theme="dark">
+              <span>🌙</span>
+              <span data-i18n="theme_dark">Темная</span>
+            </button>
+            <button class="theme-btn" data-theme="system">
+              <span>🖥️</span>
+              <span data-i18n="theme_system">Как в системе</span>
+            </button>
+          </div>
+        </section>
+
+        <section class="settings-card">
+          <button id="openTermsBtn" class="primary-btn" data-i18n="terms_button">Пользовательское соглашение</button>
+        </section>
+      </main>
+    </div>
+
+    <div id="termsModal" class="modal hidden" aria-hidden="true">
+      <div class="modal-card terms-card">
+        <div class="modal-header">
+          <h3 data-i18n="terms_title">Пользовательское соглашение</h3>
+          <button class="close-btn" id="closeTermsBtn" aria-label="Close">×</button>
+        </div>
+        <div class="terms-content">
+          <p data-i18n="terms_text">
+            Настоящее приложение предназначено для учета рабочих смен, расчета часов и дохода. Пользователь несет ответственность за корректность вводимых данных. Приложение использует локальное хранение для сохранения данных на устройстве.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
