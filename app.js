@@ -4,8 +4,7 @@ const SETTINGS_KEY = "shiftflow-settings-v1";
 const defaultSettings = {
   lang: "ru",
   theme: "light",
-  hourRate: 300,
-  requiredHours: 160
+  hourRate: 300
 };
 
 const state = {
@@ -65,11 +64,11 @@ function formatMoney(value) {
 }
 
 function getMonthStats(date) {
-  const targetYear = date.getFullYear();
-  const targetMonth = date.getMonth();
+  const year = date.getFullYear();
+  const month = date.getMonth();
   const arr = Object.entries(state.shifts).filter(([key]) => {
     const d = new Date(`${key}T00:00:00`);
-    return d.getFullYear() === targetYear && d.getMonth() === targetMonth;
+    return d.getFullYear() === year && d.getMonth() === month;
   });
 
   let totalHours = 0;
@@ -86,48 +85,78 @@ function getMonthStats(date) {
   return { totalHours, totalIncome, totalShifts };
 }
 
-function updateSummary() {
-  const stats = getMonthStats(new Date());
+function renderCalendar() {
+  const grid = document.getElementById("calendarGrid");
+  const monthLabel = document.getElementById("monthLabel");
+  if (!grid || !monthLabel) return;
+
+  monthLabel.textContent = state.currentMonth.toLocaleDateString("ru-RU", { month: "long", year: "numeric" });
+
+  const year = state.currentMonth.getFullYear();
+  const month = state.currentMonth.getMonth();
+  const firstDay = new Date(year, month, 1);
+  const startDayIndex = (firstDay.getDay() + 6) % 7;
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+  const stats = getMonthStats(state.currentMonth);
   document.getElementById("totalHours").textContent = stats.totalHours.toString();
   document.getElementById("totalShifts").textContent = stats.totalShifts.toString();
   document.getElementById("totalIncome").textContent = formatMoney(stats.totalIncome);
-}
 
-function renderShiftList() {
-  const list = document.getElementById("shiftsList");
-  const entries = Object.entries(state.shifts).sort(([a], [b]) => new Date(a) - new Date(b));
+  grid.innerHTML = "";
 
-  if (!entries.length) {
-    list.innerHTML = '<div class="empty-state">Пока нет ни одной смены. Добавьте первую смену.</div>';
-    return;
+  const prevMonthDays = new Date(year, month, 0).getDate();
+
+  for (let i = 0; i < startDayIndex; i++) {
+    const date = new Date(year, month - 1, prevMonthDays - startDayIndex + i + 1);
+    const cell = document.createElement("div");
+    cell.className = "calendar-day empty";
+    cell.innerHTML = `<span class="day-number">${date.getDate()}</span>`;
+    grid.appendChild(cell);
   }
 
-  list.innerHTML = entries.map(([key, item]) => {
-    const date = new Date(`${key}T00:00:00`);
-    const label = item.weekend ? "Выходной" : item.name || "Смена";
-    return `
-      <button class="shift-item" type="button" data-date="${key}">
-        <div class="shift-left">
-          <span class="shift-date">${date.toLocaleDateString("ru-RU", { day: "2-digit", month: "2-digit", year: "numeric" })}</span>
-          <strong>${label}</strong>
-        </div>
-        <div class="shift-meta">
-          <span>${item.hours || 0} ч</span>
-          <span>${formatMoney(item.income || 0)}</span>
-        </div>
-      </button>
-    `;
-  }).join("");
+  for (let day = 1; day <= daysInMonth; day++) {
+    const date = new Date(year, month, day);
+    const key = getKey(date);
+    const shift = state.shifts[key];
+    const cell = document.createElement("button");
+    cell.type = "button";
+    cell.className = "calendar-day";
 
-  document.querySelectorAll(".shift-item").forEach((el) => {
-    el.addEventListener("click", () => openShiftModal(el.dataset.date));
-  });
+    if (date.getDay() === 0 || date.getDay() === 6) {
+      cell.classList.add("weekend");
+    }
+
+    if (shift) {
+      cell.classList.add("shift-added");
+      const label = shift.weekend ? "Выходной" : shift.name || "Смена";
+      cell.innerHTML = `
+        <span class="day-number">${day}</span>
+        <span class="day-badge">${label}</span>
+      `;
+    } else {
+      cell.innerHTML = `<span class="day-number">${day}</span>`;
+    }
+
+    cell.addEventListener("click", () => openShiftModal(key));
+    grid.appendChild(cell);
+  }
+
+  const totalCells = grid.children.length;
+  const remaining = (7 - (totalCells % 7)) % 7;
+  for (let i = 0; i < remaining; i++) {
+    const cell = document.createElement("div");
+    cell.className = "calendar-day empty";
+    cell.innerHTML = `<span class="day-number">${i + 1}</span>`;
+    grid.appendChild(cell);
+  }
 }
 
 function renderReports() {
   const summaryEl = document.getElementById("reportSummary");
-  const months = getMonthlySummary();
+  if (!summaryEl) return;
 
+  const months = getMonthlySummary();
   if (!months.length) {
     summaryEl.innerHTML = '<div class="empty-state">Нет данных за период.</div>';
     return;
@@ -156,10 +185,10 @@ function renderReports() {
 
 function getMonthlySummary() {
   const months = new Set();
+
   Object.keys(state.shifts).forEach((key) => {
     const date = new Date(`${key}T00:00:00`);
-    const label = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
-    months.add(label);
+    months.add(`${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`);
   });
 
   return [...months].sort().map((key) => {
@@ -251,8 +280,7 @@ function saveShift(event) {
   }
 
   saveShifts();
-  updateSummary();
-  renderShiftList();
+  renderCalendar();
   renderReports();
   closeShiftModal();
 }
@@ -261,8 +289,7 @@ function deleteShift() {
   if (!state.selectedDate) return;
   delete state.shifts[state.selectedDate];
   saveShifts();
-  updateSummary();
-  renderShiftList();
+  renderCalendar();
   renderReports();
   closeShiftModal();
 }
@@ -278,26 +305,31 @@ function setPage(page) {
   });
 }
 
-function syncSettingsInputs() {
-  document.getElementById("hourRate").value = state.settings.hourRate || "";
-  document.getElementById("requiredHours").value = state.settings.requiredHours || "";
+function updateModeButtons() {
+  document.querySelectorAll("[data-lang]").forEach((btn) => {
+    btn.classList.toggle("active", btn.dataset.lang === state.settings.lang);
+  });
+
+  document.querySelectorAll("[data-theme]").forEach((btn) => {
+    btn.classList.toggle("active", btn.dataset.theme === state.settings.theme);
+  });
 }
 
 function bindSettings() {
-  document.querySelectorAll(".lang-btn").forEach((btn) => {
+  document.querySelectorAll("[data-lang]").forEach((btn) => {
     btn.addEventListener("click", () => {
       state.settings.lang = btn.dataset.lang;
       saveSettings();
-      updateButtonsState();
+      updateModeButtons();
     });
   });
 
-  document.querySelectorAll(".theme-btn").forEach((btn) => {
+  document.querySelectorAll("[data-theme]").forEach((btn) => {
     btn.addEventListener("click", () => {
       state.settings.theme = btn.dataset.theme;
       saveSettings();
       setTheme();
-      updateButtonsState();
+      updateModeButtons();
     });
   });
 
@@ -306,48 +338,24 @@ function bindSettings() {
     saveSettings();
   });
 
-  document.getElementById("requiredHours").addEventListener("input", (event) => {
-    state.settings.requiredHours = Number(event.target.value || 0);
-    saveSettings();
-  });
-
-  document.getElementById("openTermsBtn").addEventListener("click", () => {
-    document.getElementById("termsModal").classList.remove("hidden");
-  });
-
-  document.getElementById("closeTermsBtn").addEventListener("click", () => {
-    document.getElementById("termsModal").classList.add("hidden");
-  });
-
-  document.getElementById("termsModal").addEventListener("click", (event) => {
-    if (event.target === event.currentTarget) {
-      event.currentTarget.classList.add("hidden");
-    }
-  });
-}
-
-function updateButtonsState() {
-  document.querySelectorAll(".lang-btn").forEach((btn) => {
-    btn.classList.toggle("active", btn.dataset.lang === state.settings.lang);
-  });
-
-  document.querySelectorAll(".theme-btn").forEach((btn) => {
-    btn.classList.toggle("active", btn.dataset.theme === state.settings.theme);
-  });
+  document.getElementById("hourRate").value = state.settings.hourRate || "";
 }
 
 document.addEventListener("DOMContentLoaded", () => {
   setTheme();
-  syncSettingsInputs();
   bindSettings();
-  updateButtonsState();
-  updateSummary();
-  renderShiftList();
+  updateModeButtons();
+  renderCalendar();
   renderReports();
 
-  document.getElementById("addShiftBtn").addEventListener("click", () => {
-    const today = new Date();
-    openShiftModal(getKey(today));
+  document.getElementById("prevMonth").addEventListener("click", () => {
+    state.currentMonth = new Date(state.currentMonth.getFullYear(), state.currentMonth.getMonth() - 1, 1);
+    renderCalendar();
+  });
+
+  document.getElementById("nextMonth").addEventListener("click", () => {
+    state.currentMonth = new Date(state.currentMonth.getFullYear(), state.currentMonth.getMonth() + 1, 1);
+    renderCalendar();
   });
 
   document.getElementById("reportPrevMonth").addEventListener("click", () => {
