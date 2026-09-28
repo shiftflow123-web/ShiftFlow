@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Shift Flow</title>
     <link rel="stylesheet" href="styles.css" />
+    <meta name="description" content="Shift Flow — учёт смен, часов и дохода" />
   </head>
   <body>
     <div class="app-shell">
@@ -14,119 +15,163 @@
             <svg class="logo-svg" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Shift Flow logo">
               <defs>
                 <linearGradient id="glassGradient" x1="0%" x2="100%" y1="0%" y2="100%">
-                  <stop offset="0%" stop-color="#B9E7FF" stop-opacity="0.95"/>
-                  <stop offset="35%" stop-color="#A9D7FF" stop-opacity="0.8"/>
-                  <stop offset="65%" stop-color="#8E8BFF" stop-opacity="0.8"/>
-                  <stop offset="100%" stop-color="#70E6C3" stop-opacity="0.9"/>
-                </linearGradient>
-                <linearGradient id="shineGradient" x1="0%" x2="100%" y1="0%" y2="0%">
-                  <stop offset="0%" stop-color="rgba(255,255,255,0.9)"/>
-                  <stop offset="50%" stop-color="rgba(255,255,255,0.35)"/>
-                  <stop offset="100%" stop-color="rgba(255,255,255,0.15)"/>
+                  <stop offset="0%" stop-color="#B9E7FF"/>
+                  <stop offset="35%" stop-color="#A5D4FF"/>
+                  <stop offset="65%" stop-color="#9B9CFF"/>
+                  <stop offset="100%" stop-color="#70E6C3"/>
                 </linearGradient>
               </defs>
-              <rect x="14" y="14" width="92" height="92" rx="28" fill="rgba(255,255,255,0.14)" stroke="rgba(255,255,255,0.6)"/>
-              <path d="M35 62C48 46, 58 38, 75 38C84 38, 90 41, 95 47C88 44, 82 43, 76 43C59 43, 48 52, 43 66C40 74, 39 82, 35 88C32 81, 31 72, 35 62Z" fill="url(#glassGradient)" opacity="0.9"/>
-              <circle cx="61" cy="62" r="24" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.7)" stroke-width="2"/>
-              <path d="M61 62L61 46" stroke="rgba(255,255,255,0.92)" stroke-width="3" stroke-linecap="round"/>
-              <path d="M61 62L72 69" stroke="rgba(255,255,255,0.92)" stroke-width="3" stroke-linecap="round"/>
-              <circle cx="61" cy="62" r="5" fill="rgba(255,255,255,0.9)"/>
-              <path d="M18 82C29 67, 37 60, 51 55" stroke="rgba(255,255,255,0.5)" stroke-width="3" stroke-linecap="round" fill="none"/>
-              <path d="M92 35C86 28, 79 24, 70 22" stroke="rgba(255,255,255,0.5)" stroke-width="3" stroke-linecap="round" fill="none"/>
-              <path d="M20 40C28 31, 39 24, 52 22" stroke="url(#shineGradient)" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.8"/>
+              <rect x="14" y="14" width="92" height="92" rx="26" fill="rgba(255,255,255,0.14)" stroke="rgba(255,255,255,0.58)"/>
+              <path d="M34 64C44 50, 57 40, 74 40C82 40, 90 43, 94 47C88 44, 81 42, 73 43C58 43, 48 51, 43 64C40 72, 38 80, 34 87C31 80, 30 72, 34 64Z" fill="url(#glassGradient)" opacity="0.9"/>
+              <circle cx="60" cy="62" r="24" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.7)" stroke-width="2"/>
+              <path d="M60 62V46" stroke="rgba(255,255,255,0.9)" stroke-width="3" stroke-linecap="round"/>
+              <path d="M60 62L70 69" stroke="rgba(255,255,255,0.9)" stroke-width="3" stroke-linecap="round"/>
+              <circle cx="60" cy="62" r="5" fill="rgba(255,255,255,0.9)"/>
+              <path d="M18 86C30 71, 38 62, 51 56" stroke="rgba(255,255,255,0.45)" stroke-width="3" stroke-linecap="round" fill="none"/>
             </svg>
           </div>
 
           <div class="brand-copy">
-            <h1 data-i18n="brand">Shift Flow</h1>
-            <p class="tagline" data-i18n="tagline">Твой поток смен — под контролем</p>
+            <h1>Shift Flow</h1>
+            <p class="tagline">Твой поток смен — под контролем</p>
           </div>
         </div>
-
-        <nav class="top-nav" aria-label="Основная навигация">
-          <a href="index.html" class="nav-link active" data-i18n="nav_home">Главная</a>
-          <a href="reports.html" class="nav-link" data-i18n="nav_reports">Отчёты</a>
-          <a href="settings.html" class="nav-link" data-i18n="nav_settings">Настройки</a>
-        </nav>
       </header>
 
-      <main class="page">
-        <section class="calendar-panel glass-panel">
-          <div class="calendar-header">
-            <button id="prevMonth" class="icon-btn" aria-label="Предыдущий месяц">‹</button>
-            <h2 id="monthLabel">Месяц</h2>
-            <button id="nextMonth" class="icon-btn" aria-label="Следующий месяц">›</button>
+      <main class="page" id="mainPage">
+        <section class="main-panel glass-panel">
+          <div class="main-panel-top">
+            <div>
+              <p class="panel-kicker">Главная</p>
+              <h2>Учет смен</h2>
+            </div>
+            <button id="addShiftBtn" class="primary-btn" type="button">+ Добавить смену</button>
           </div>
 
-          <div class="calendar-weekdays">
-            <span>Пн</span>
-            <span>Вт</span>
-            <span>Ср</span>
-            <span>Чт</span>
-            <span>Пт</span>
-            <span>Сб</span>
-            <span>Вс</span>
+          <div class="summary-grid">
+            <article class="summary-card glass-panel">
+              <div class="stat-head">
+                <div class="stat-icon stat-clock" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="8.5"/>
+                    <path d="M12 7v5l3.5 2.2"/>
+                  </svg>
+                </div>
+                <span class="stat-label">Часы</span>
+              </div>
+              <strong id="totalHours">0</strong>
+            </article>
+
+            <article class="summary-card glass-panel">
+              <div class="stat-head">
+                <div class="stat-icon stat-shifts" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="3.5" y="5" width="17" height="15.5" rx="3"/>
+                    <path d="M8 3.5v3M16 3.5v3M3.5 9.5h17"/>
+                    <path d="M8.5 13.5h2.5v2.5H8.5zm4 0h2.5v2.5h-2.5z"/>
+                  </svg>
+                </div>
+                <span class="stat-label">Смены</span>
+              </div>
+              <strong id="totalShifts">0</strong>
+            </article>
+
+            <article class="summary-card glass-panel">
+              <div class="stat-head">
+                <div class="stat-icon stat-income" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="13.5" r="5.5"/>
+                    <path d="M14.5 6.5h1.8A2.7 2.7 0 0 1 19 9.2v.8"/>
+                    <path d="M8 8.8V7.2A2.2 2.2 0 0 1 10.2 5h2.6A2.2 2.2 0 0 1 15 7.2v1.6"/>
+                    <path d="M6 18.5h12"/>
+                  </svg>
+                </div>
+                <span class="stat-label">Доход</span>
+              </div>
+              <strong id="totalIncome">0 ₽</strong>
+            </article>
           </div>
 
-          <div id="calendarGrid" class="calendar-grid"></div>
+          <section class="list-panel glass-panel">
+            <div class="list-header">
+              <h3>Список смен</h3>
+              <button id="sortByDateBtn" class="mini-btn" type="button">По дате</button>
+            </div>
+            <div id="shiftsList" class="shifts-list"></div>
+          </section>
         </section>
+      </main>
 
-        <section class="stats">
-          <article class="stat-card glass-panel">
-            <div class="stat-head">
-              <div class="stat-icon stat-clock" aria-hidden="true">
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="12" cy="12" r="8.5"/>
-                  <path d="M12 7v5l3.5 2.2"/>
-                </svg>
-              </div>
-              <span class="stat-label" data-i18n="total_hours">Часы</span>
-            </div>
-            <strong id="totalHours">0</strong>
-          </article>
+      <main class="page hidden" id="reportsPage">
+        <section class="report-panel glass-panel">
+          <div class="report-header">
+            <button id="reportPrevMonth" class="icon-btn" type="button">‹</button>
+            <h2 id="reportMonthLabel">Месяц</h2>
+            <button id="reportNextMonth" class="icon-btn" type="button">›</button>
+          </div>
+          <div id="reportSummary" class="report-summary"></div>
+        </section>
+      </main>
 
-          <article class="stat-card glass-panel">
-            <div class="stat-head">
-              <div class="stat-icon stat-shifts" aria-hidden="true">
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <rect x="3.5" y="5" width="17" height="15.5" rx="3"/>
-                  <path d="M8 3.5v3M16 3.5v3M3.5 9.5h17"/>
-                  <path d="M8.5 13.5h2.5v2.5H8.5zm4 0h2.5v2.5h-2.5z"/>
-                </svg>
-              </div>
-              <span class="stat-label" data-i18n="total_shifts">Смены</span>
+      <main class="page hidden" id="settingsPage">
+        <section class="settings-panel glass-panel">
+          <div class="settings-block">
+            <h3>Язык</h3>
+            <div class="option-group">
+              <button class="lang-btn active" data-lang="ru" type="button">
+                <span class="flag">🇷🇺</span>
+                <span>Русский</span>
+              </button>
+              <button class="lang-btn" data-lang="en" type="button">
+                <span class="flag">🇬🇧</span>
+                <span>English</span>
+              </button>
             </div>
-            <strong id="totalShifts">0</strong>
-          </article>
+          </div>
 
-          <article class="stat-card glass-panel">
-            <div class="stat-head">
-              <div class="stat-icon stat-income" aria-hidden="true">
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="12" cy="13.5" r="5.5"/>
-                  <path d="M14.5 6.5h1.8A2.7 2.7 0 0 1 19 9.2v.8"/>
-                  <path d="M8 8.8V7.2A2.2 2.2 0 0 1 10.2 5h2.6A2.2 2.2 0 0 1 15 7.2v1.6"/>
-                  <path d="M6 18.5h12"/>
-                </svg>
-              </div>
-              <span class="stat-label" data-i18n="total_income">Доход</span>
+          <div class="settings-block">
+            <h3>Тема</h3>
+            <div class="option-group">
+              <button class="theme-btn active" data-theme="light" type="button">
+                <span>☀️</span>
+                <span>Светлая</span>
+              </button>
+              <button class="theme-btn" data-theme="dark" type="button">
+                <span>🌙</span>
+                <span>Тёмная</span>
+              </button>
+              <button class="theme-btn" data-theme="system" type="button">
+                <span>🖥️</span>
+                <span>Как в системе</span>
+              </button>
             </div>
-            <strong id="totalIncome">0 ₽</strong>
-          </article>
+          </div>
+
+          <div class="settings-block">
+            <h3>Параметры</h3>
+            <div class="settings-fields">
+              <label class="field">
+                <span>Ставка за час</span>
+                <input type="number" id="hourRate" min="0" step="1" placeholder="300" />
+              </label>
+              <label class="field">
+                <span>Норматив часов</span>
+                <input type="number" id="requiredHours" min="0" step="1" placeholder="160" />
+              </label>
+            </div>
+          </div>
+
+          <div class="settings-block">
+            <button id="openTermsBtn" class="primary-btn" type="button">Пользовательское соглашение</button>
+          </div>
         </section>
       </main>
     </div>
 
     <nav class="bottom-nav" aria-label="Нижняя навигация">
-      <a href="index.html" class="bottom-nav-link active">
-        <span>Главная</span>
-      </a>
-      <a href="reports.html" class="bottom-nav-link">
-        <span>Отчёты</span>
-      </a>
-      <a href="settings.html" class="bottom-nav-link">
-        <span>Настройки</span>
-      </a>
+      <button class="bottom-nav-link active" data-page="main" type="button">Главная</button>
+      <button class="bottom-nav-link" data-page="reports" type="button">Отчёты</button>
+      <button class="bottom-nav-link" data-page="settings" type="button">Настройки</button>
     </nav>
 
     <div id="shiftModal" class="modal hidden" aria-hidden="true">
@@ -138,30 +183,44 @@
 
         <form id="shiftForm">
           <label>
-            <span data-i18n="shift_name">Наименование смены</span>
+            <span>Наименование смены</span>
             <input type="text" id="shiftName" placeholder="Ночная смена" />
           </label>
 
           <label>
-            <span data-i18n="shift_hours">Количество часов</span>
+            <span>Количество часов</span>
             <input type="number" id="shiftHours" min="0" step="0.5" />
           </label>
 
           <label>
-            <span data-i18n="shift_income">Доход</span>
+            <span>Доход</span>
             <input type="number" id="shiftIncome" min="0" step="1" />
           </label>
 
           <label class="checkbox-row">
             <input type="checkbox" id="isWeekend" />
-            <span data-i18n="weekend_day">Выходной день</span>
+            <span>Выходной день</span>
           </label>
 
           <div class="modal-actions">
-            <button type="button" id="deleteShiftBtn" class="danger-btn hidden" data-i18n="delete_shift">Удалить смену</button>
-            <button type="submit" class="primary-btn" data-i18n="save">Сохранить</button>
+            <button type="button" id="deleteShiftBtn" class="danger-btn hidden">Удалить смену</button>
+            <button type="submit" class="primary-btn">Сохранить</button>
           </div>
         </form>
+      </div>
+    </div>
+
+    <div id="termsModal" class="modal hidden" aria-hidden="true">
+      <div class="modal-card glass-panel terms-card">
+        <div class="modal-header">
+          <h3>Пользовательское соглашение</h3>
+          <button class="close-btn" id="closeTermsBtn" aria-label="Закрыть">×</button>
+        </div>
+        <div class="terms-content">
+          <p>
+            Настоящее приложение предназначено для учета рабочих смен, расчета часов и дохода. Пользователь несет ответственность за корректность вводимых данных. Приложение сохраняет все данные локально на устройстве в браузере.
+          </p>
+        </div>
       </div>
     </div>
 
