@@ -10,64 +10,94 @@
     <div class="app-shell">
       <header class="topbar">
         <div class="brand">
-          <div class="logo">SF</div>
-          <div>
+          <div class="logo-wrap" aria-label="Shift Flow logo">
+            <svg class="logo-svg" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Shift Flow logo">
+              <defs>
+                <linearGradient id="glassGradient3" x1="0%" x2="100%" y1="0%" y2="100%">
+                  <stop offset="0%" stop-color="#B9E7FF" stop-opacity="0.95"/>
+                  <stop offset="35%" stop-color="#A9D7FF" stop-opacity="0.8"/>
+                  <stop offset="65%" stop-color="#8E8BFF" stop-opacity="0.8"/>
+                  <stop offset="100%" stop-color="#70E6C3" stop-opacity="0.9"/>
+                </linearGradient>
+              </defs>
+              <rect x="14" y="14" width="92" height="92" rx="28" fill="rgba(255,255,255,0.14)" stroke="rgba(255,255,255,0.6)"/>
+              <path d="M35 62C48 46, 58 38, 75 38C84 38, 90 41, 95 47C88 44, 82 43, 76 43C59 43, 48 52, 43 66C40 74, 39 82, 35 88C32 81, 31 72, 35 62Z" fill="url(#glassGradient3)" opacity="0.9"/>
+              <circle cx="61" cy="62" r="24" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.7)" stroke-width="2"/>
+              <path d="M61 62L61 46" stroke="rgba(255,255,255,0.92)" stroke-width="3" stroke-linecap="round"/>
+              <path d="M61 62L72 69" stroke="rgba(255,255,255,0.92)" stroke-width="3" stroke-linecap="round"/>
+              <circle cx="61" cy="62" r="5" fill="rgba(255,255,255,0.9)"/>
+            </svg>
+          </div>
+
+          <div class="brand-copy">
             <h1 data-i18n="brand">Shift Flow</h1>
-            <small data-i18n="tagline">Track your shifts, control your income</small>
+            <p class="tagline" data-i18n="tagline">Твой поток смен — под контролем</p>
           </div>
         </div>
 
-        <nav class="nav">
+        <nav class="top-nav" aria-label="Основная навигация">
           <a href="index.html" class="nav-link" data-i18n="nav_home">Главная</a>
-          <a href="reports.html" class="nav-link" data-i18n="nav_reports">Отчеты</a>
+          <a href="reports.html" class="nav-link" data-i18n="nav_reports">Отчёты</a>
           <a href="settings.html" class="nav-link active" data-i18n="nav_settings">Настройки</a>
         </nav>
       </header>
 
       <main class="page settings-page">
-        <section class="settings-card">
+        <section class="settings-card glass-panel">
           <h2 data-i18n="language">Язык</h2>
           <div class="option-group">
-            <button class="lang-btn active" data-lang="ru">
+            <button class="lang-btn active" data-lang="ru" type="button">
               <span class="flag">🇷🇺</span>
               <span>Русский</span>
             </button>
-            <button class="lang-btn" data-lang="en">
+            <button class="lang-btn" data-lang="en" type="button">
               <span class="flag">🇬🇧</span>
               <span>English</span>
             </button>
           </div>
         </section>
 
-        <section class="settings-card">
+        <section class="settings-card glass-panel">
           <h2 data-i18n="theme">Тема</h2>
           <div class="option-group">
-            <button class="theme-btn active" data-theme="light">
+            <button class="theme-btn active" data-theme="light" type="button">
               <span>☀️</span>
               <span data-i18n="theme_light">Светлая</span>
             </button>
-            <button class="theme-btn" data-theme="dark">
+            <button class="theme-btn" data-theme="dark" type="button">
               <span>🌙</span>
-              <span data-i18n="theme_dark">Темная</span>
+              <span data-i18n="theme_dark">Тёмная</span>
             </button>
-            <button class="theme-btn" data-theme="system">
+            <button class="theme-btn" data-theme="system" type="button">
               <span>🖥️</span>
               <span data-i18n="theme_system">Как в системе</span>
             </button>
           </div>
         </section>
 
-        <section class="settings-card">
-          <button id="openTermsBtn" class="primary-btn" data-i18n="terms_button">Пользовательское соглашение</button>
+        <section class="settings-card glass-panel">
+          <button id="openTermsBtn" class="primary-btn" data-i18n="terms_button" type="button">Пользовательское соглашение</button>
         </section>
       </main>
     </div>
 
+    <nav class="bottom-nav" aria-label="Нижняя навигация">
+      <a href="index.html" class="bottom-nav-link">
+        <span>Главная</span>
+      </a>
+      <a href="reports.html" class="bottom-nav-link">
+        <span>Отчёты</span>
+      </a>
+      <a href="settings.html" class="bottom-nav-link active">
+        <span>Настройки</span>
+      </a>
+    </nav>
+
     <div id="termsModal" class="modal hidden" aria-hidden="true">
-      <div class="modal-card terms-card">
+      <div class="modal-card glass-panel terms-card">
         <div class="modal-header">
           <h3 data-i18n="terms_title">Пользовательское соглашение</h3>
-          <button class="close-btn" id="closeTermsBtn" aria-label="Close">×</button>
+          <button class="close-btn" id="closeTermsBtn" aria-label="Закрыть">×</button>
         </div>
         <div class="terms-content">
           <p data-i18n="terms_text">

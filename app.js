@@ -9,9 +9,9 @@ const defaultSettings = {
 const translations = {
   ru: {
     brand: "Shift Flow",
-    tagline: "Управляй смены, контролируй доход",
+    tagline: "Твой поток смен — под контролем",
     nav_home: "Главная",
-    nav_reports: "Отчеты",
+    nav_reports: "Отчёты",
     nav_settings: "Настройки",
     total_hours: "Часы",
     total_shifts: "Смены",
@@ -25,7 +25,7 @@ const translations = {
     language: "Язык",
     theme: "Тема",
     theme_light: "Светлая",
-    theme_dark: "Темная",
+    theme_dark: "Тёмная",
     theme_system: "Как в системе",
     terms_button: "Пользовательское соглашение",
     terms_title: "Пользовательское соглашение",
@@ -43,7 +43,7 @@ const translations = {
   },
   en: {
     brand: "Shift Flow",
-    tagline: "Manage shifts, track your income",
+    tagline: "Your shift flow, in control",
     nav_home: "Home",
     nav_reports: "Reports",
     nav_settings: "Settings",
@@ -161,7 +161,7 @@ function updateButtonsState() {
     btn.classList.toggle("active", btn.dataset.lang === state.settings.lang);
   });
 
-  document.querySelectorAll(".theme-btn").forEach((btn) => {
+  docu‌ment.querySelectorAll(".theme-btn").forEach((btn) => {
     btn.classList.toggle("active", btn.dataset.theme === state.settings.theme);
   });
 }
