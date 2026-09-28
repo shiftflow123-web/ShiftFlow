@@ -3,8 +3,7 @@ const SETTINGS_KEY = "shiftflow-settings-v1";
 
 const defaultSettings = {
   lang: "ru",
-  theme: "light",
-  hourRate: 300
+  theme: "light"
 };
 
 const state = {
@@ -333,12 +332,28 @@ function bindSettings() {
     });
   });
 
-  document.getElementById("hourRate").addEventListener("input", (event) => {
-    state.settings.hourRate = Number(event.target.value || 0);
-    saveSettings();
-  });
+  const termsBtn = document.getElementById("openTermsBtn");
+  const termsModal = document.getElementById("termsModal");
+  const closeTermsBtn = document.getElementById("closeTermsBtn");
 
-  document.getElementById("hourRate").value = state.settings.hourRate || "";
+  if (termsBtn && termsModal && closeTermsBtn) {
+    termsBtn.addEventListener("click", () => {
+      termsModal.classList.remove("hidden");
+      termsModal.setAttribute("aria-hidden", "false");
+    });
+
+    closeTermsBtn.addEventListener("click", () => {
+      termsModal.classList.add("hidden");
+      termsModal.setAttribute("aria-hidden", "true");
+    });
+
+    termsModal.addEventListener("click", (event) => {
+      if (event.target === event.currentTarget) {
+        termsModal.classList.add("hidden");
+        termsModal.setAttribute("aria-hidden", "true");
+      }
+    });
+  }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
