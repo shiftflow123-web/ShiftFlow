@@ -49,6 +49,16 @@ function getKey(date) {
   return `${year}-${month}-${day}`;
 }
 
+function getTodayKey() {
+  return getKey(new Date());
+}
+
+function capitalizeMonth(dateString) {
+  const date = new Date(dateString);
+  const monthName = date.toLocaleDateString("ru-RU", { month: "long", year: "numeric" });
+  return monthName.charAt(0).toUpperCase() + monthName.slice(1);
+}
+
 function setTheme() {
   const currentTheme = state.settings.theme;
   document.body.classList.toggle("dark", currentTheme === "dark");
@@ -89,7 +99,7 @@ function renderCalendar() {
   const monthLabel = document.getElementById("monthLabel");
   if (!grid || !monthLabel) return;
 
-  monthLabel.textContent = state.currentMonth.toLocaleDateString("ru-RU", { month: "long", year: "numeric" });
+  monthLabel.textContent = capitalizeMonth(state.currentMonth);
 
   const year = state.currentMonth.getFullYear();
   const month = state.currentMonth.getMonth();
@@ -105,6 +115,7 @@ function renderCalendar() {
   grid.innerHTML = "";
 
   const prevMonthDays = new Date(year, month, 0).getDate();
+  const todayKey = getTodayKey();
 
   for (let i = 0; i < startDayIndex; i++) {
     const date = new Date(year, month - 1, prevMonthDays - startDayIndex + i + 1);
@@ -124,6 +135,10 @@ function renderCalendar() {
 
     if (date.getDay() === 0 || date.getDay() === 6) {
       cell.classList.add("weekend");
+    }
+
+    if (key === todayKey) {
+      cell.classList.add("today");
     }
 
     if (shift) {
@@ -210,7 +225,7 @@ function getMonthlySummary() {
     });
 
     return {
-      label: date.toLocaleDateString("ru-RU", { month: "long", year: "numeric" }),
+      label: capitalizeMonth(date.toISOString()),
       hours,
       shifts,
       income
@@ -229,7 +244,9 @@ function openShiftModal(dateKey) {
   const isWeekend = document.getElementById("isWeekend");
 
   const date = new Date(`${dateKey}T00:00:00`);
-  dateLabel.textContent = date.toLocaleDateString("ru-RU", { day: "numeric", month: "long", year: "numeric" });
+  const dateStr = date.toLocaleDateString("ru-RU", { day: "numeric", month: "long", year: "numeric" });
+  const capitalizedDate = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
+  dateLabel.textContent = capitalizedDate;
 
   const existing = state.shifts[dateKey];
   if (existing) {
@@ -375,13 +392,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.getElementById("reportPrevMonth").addEventListener("click", () => {
     state.reportMonth = new Date(state.reportMonth.getFullYear(), state.reportMonth.getMonth() - 1, 1);
-    document.getElementById("reportMonthLabel").textContent = state.reportMonth.toLocaleDateString("ru-RU", { month: "long", year: "numeric" });
+    document.getElementById("reportMonthLabel").textContent = capitalizeMonth(state.reportMonth);
     renderReports();
   });
 
   document.getElementById("reportNextMonth").addEventListener("click", () => {
     state.reportMonth = new Date(state.reportMonth.getFullYear(), state.reportMonth.getMonth() + 1, 1);
-    document.getElementById("reportMonthLabel").textContent = state.reportMonth.toLocaleDateString("ru-RU", { month: "long", year: "numeric" });
+    document.getElementById("reportMonthLabel").textContent = capitalizeMonth(state.reportMonth);
     renderReports();
   });
 
@@ -396,5 +413,5 @@ document.addEventListener("DOMContentLoaded", () => {
     btn.addEventListener("click", () => setPage(btn.dataset.page));
   });
 
-  document.getElementById("reportMonthLabel").textContent = state.reportMonth.toLocaleDateString("ru-RU", { month: "long", year: "numeric" });
+  document.getElementById("reportMonthLabel").textContent = capitalizeMonth(state.reportMonth);
 });
