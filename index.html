@@ -4,24 +4,27 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Shift Flow</title>
+    <meta name="theme-color" content="#edf4ff" />
     <link rel="stylesheet" href="styles.css" />
   </head>
-  <body>
+  <body data-theme="light">
     <div class="app-shell">
-      <header class="topbar">
+      <div id="themeReveal" class="theme-reveal" aria-hidden="true"></div>
+
+      <header class="topbar glass-panel">
         <div class="brand">
           <div class="logo-wrap" aria-label="Shift Flow logo">
             <svg class="logo-svg" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Shift Flow logo">
               <defs>
                 <linearGradient id="logoGradient" x1="0%" x2="100%" y1="0%" y2="100%">
-                  <stop offset="0%" stop-color="#B9E7FF"/>
-                  <stop offset="35%" stop-color="#9DC7FF"/>
-                  <stop offset="65%" stop-color="#8E8CFF"/>
-                  <stop offset="100%" stop-color="#6FE3C2"/>
+                  <stop offset="0%" stop-color="#bfe9ff" />
+                  <stop offset="35%" stop-color="#a9c9ff" />
+                  <stop offset="65%" stop-color="#9090ff" />
+                  <stop offset="100%" stop-color="#7fe7d3" />
                 </linearGradient>
               </defs>
-              <rect x="14" y="14" width="92" height="92" rx="28" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.5)"/>
-              <path d="M35 64C46 49 58 40 75 40C85 40 91 43 95 48C89 44 82 42 75 42C58 42 48 51 43 64C40 72 38 80 35 87C31 80 30 71 35 64Z" fill="url(#logoGradient)" opacity="0.9"/>
+              <rect x="14" y="14" width="92" height="92" rx="28" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.52)" />
+              <path d="M35 64C46 49 58 40 75 40C85 40 91 43 95 48C89 44 82 42 75 42C58 42 48 51 43 64C40 72 38 80 35 87C31 80 30 71 35 64Z" fill="url(#logoGradient)" opacity="0.92"/>
               <circle cx="60" cy="62" r="24" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.7)" stroke-width="2"/>
               <path d="M60 62V46" stroke="rgba(255,255,255,0.92)" stroke-width="3" stroke-linecap="round"/>
               <path d="M60 62L71 69" stroke="rgba(255,255,255,0.92)" stroke-width="3" stroke-linecap="round"/>
@@ -35,14 +38,21 @@
             <p class="tagline">Твой поток смен — под контролем</p>
           </div>
         </div>
+
+        <button id="themeToggle" class="theme-toggle-btn" type="button" aria-label="Переключить тему">
+          <span class="theme-icon">☀️</span>
+        </button>
       </header>
 
-      <main class="page" id="mainPage">
-        <section class="calendar-panel glass-panel">
-          <div class="calendar-header">
+      <main id="page-main" class="page-view active">
+        <section class="panel main-panel">
+          <div class="section-header row-between">
             <button id="prevMonth" class="icon-btn" type="button" aria-label="Предыдущий месяц">‹</button>
             <h2 id="monthLabel">Месяц</h2>
-            <button id="nextMonth" class="icon-btn" type="button" aria-label="Следующий месяц">›</button>
+            <div class="header-actions">
+              <button id="graphPresetBtn" class="icon-btn graph-btn" type="button" aria-label="Показать шаблон графика">▦</button>
+              <button id="nextMonth" class="icon-btn" type="button" aria-label="Следующий месяц">›</button>
+            </div>
           </div>
 
           <div class="calendar-weekdays">
@@ -56,184 +66,152 @@
           </div>
 
           <div id="calendarGrid" class="calendar-grid"></div>
-        </section>
 
-        <section class="stats">
-          <article class="stat-card glass-panel">
-            <div class="stat-head">
-              <div class="stat-icon stat-clock" aria-hidden="true">
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="12" cy="12" r="8.5"/>
-                  <path d="M12 7v5l3.5 2.2"/>
-                </svg>
-              </div>
-              <span class="stat-label">Часы</span>
-            </div>
-            <strong id="totalHours">0</strong>
-          </article>
-
-          <article class="stat-card glass-panel">
-            <div class="stat-head">
-              <div class="stat-icon stat-shifts" aria-hidden="true">
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <rect x="3.5" y="5" width="17" height="15.5" rx="3"/>
-                  <path d="M8 3.5v3M16 3.5v3M3.5 9.5h17"/>
-                  <path d="M8.5 13.5h2.5v2.5H8.5zm4 0h2.5v2.5h-2.5z"/>
-                </svg>
-              </div>
-              <span class="stat-label">Смены</span>
-            </div>
-            <strong id="totalShifts">0</strong>
-          </article>
-
-          <article class="stat-card glass-panel">
-            <div class="stat-head">
-              <div class="stat-icon stat-income" aria-hidden="true">
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="12" cy="13.5" r="5.5"/>
-                  <path d="M14.5 6.5h1.8A2.7 2.7 0 0 1 19 9.2v.8"/>
-                  <path d="M8 8.8V7.2A2.2 2.2 0 0 1 10.2 5h2.6A2.2 2.2 0 0 1 15 7.2v1.6"/>
-                  <path d="M6 18.5h12"/>
-                </svg>
-              </div>
-              <span class="stat-label">Доход</span>
-            </div>
-            <strong id="totalIncome">0 ₽</strong>
-          </article>
+          <div id="mainStats" class="stats-grid"></div>
         </section>
       </main>
 
-      <main class="page hidden" id="reportsPage">
-        <section class="report-panel glass-panel">
-          <div class="report-header">
-            <button id="reportPrevMonth" class="icon-btn" type="button">‹</button>
-            <h2 id="reportMonthLabel">Месяц</h2>
-            <button id="reportNextMonth" class="icon-btn" type="button">›</button>
+      <main id="page-reports" class="page-view hidden">
+        <section class="panel report-panel">
+          <div class="section-header row-between">
+            <button id="reportPrevYear" class="icon-btn" type="button" aria-label="Предыдущий год">‹</button>
+            <h2 id="reportYearLabel">2026</h2>
+            <button id="reportNextYear" class="icon-btn" type="button" aria-label="Следующий год">›</button>
           </div>
-          <div id="reportSummary" class="report-summary"></div>
+
+          <div id="reportMonthCards" class="report-month-list"></div>
+
+          <div class="chart-card glass-panel">
+            <div class="chart-header">
+              <h3>Доходы по месяцам</h3>
+            </div>
+            <div id="incomeChart" class="income-chart"></div>
+          </div>
+
+          <div class="year-summary glass-panel sticky-year-summary">
+            <div class="year-summary-head">
+              <span>Итог по году</span>
+              <strong id="yearSummaryTitle">2026</strong>
+            </div>
+            <div id="yearSummary" class="year-summary-grid"></div>
+          </div>
         </section>
       </main>
 
-      <main class="page hidden" id="settingsPage">
-        <section class="settings-panel glass-panel">
-          <div class="settings-block">
-            <h3>Язык</h3>
-            <div class="option-group">
-              <button class="lang-toggle active" data-lang="ru" type="button">
-                <span class="flag">🇷🇺</span>
-                <span>Русский</span>
-              </button>
-              <button class="lang-toggle" data-lang="en" type="button">
-                <span class="flag">🇬🇧</span>
-                <span>English</span>
-              </button>
-            </div>
+      <main id="page-settings" class="page-view hidden">
+        <section class="panel settings-panel">
+          <div class="section-header row-between">
+            <h2>Работы</h2>
+            <button id="addWorkBtn" class="chip-btn" type="button">+ Добавить</button>
           </div>
-
-          <div class="settings-block">
-            <h3>Тема</h3>
-            <div class="option-group">
-              <button class="theme-toggle active" data-theme="light" type="button">
-                <span>☀️</span>
-                <span>Светлая</span>
-              </button>
-              <button class="theme-toggle" data-theme="dark" type="button">
-                <span>🌙</span>
-                <span>Тёмная</span>
-              </button>
-            </div>
-          </div>
-
-          <div class="settings-block">
-            <button id="openTermsBtn" class="terms-btn" type="button">📄 Пользовательское соглашение</button>
-          </div>
+          <div id="worksList" class="works-list"></div>
         </section>
       </main>
     </div>
 
-    <nav class="bottom-nav" aria-label="Нижняя навигация">
-      <button class="bottom-nav-link active" data-page="main" type="button" title="Главная">
-        <span class="nav-icon">
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
-          </svg>
-        </span>
-        <span class="nav-label">Главная</span>
+    <nav class="tabbar glass-panel" aria-label="Навигация"><div class="tab-indicator"></div>
+      <button class="tab-item active" data-tab="main" type="button">
+        <span class="tab-icon">⌂</span>
+        <span class="tab-text">Главная</span>
       </button>
-      <button class="bottom-nav-link" data-page="reports" type="button" title="Отчёты">
-        <span class="nav-icon">
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <rect x="3" y="3" width="7" height="7" rx="1"/>
-            <rect x="14" y="3" width="7" height="7" rx="1"/>
-            <rect x="14" y="14" width="7" height="7" rx="1"/>
-            <rect x="3" y="14" width="7" height="7" rx="1"/>
-          </svg>
-        </span>
-        <span class="nav-label">Отчёты</span>
+      <button class="tab-item" data-tab="reports" type="button">
+        <span class="tab-icon">◫</span>
+        <span class="tab-text">Отчёты</span>
       </button>
-      <button class="bottom-nav-link" data-page="settings" type="button" title="Настройки">
-        <span class="nav-icon">
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="12" cy="12" r="3"/>
-            <path d="M12 2v4m0 12v4M2 12h4m12 0h4M5.5 5.5l2.8 2.8m8.4 0l2.8-2.8M5.5 18.5l2.8-2.8m8.4 0l2.8 2.8"/>
-          </svg>
-        </span>
-        <span class="nav-label">Настройки</span>
+      <button class="tab-item" data-tab="settings" type="button">
+        <span class="tab-icon">⚙</span>
+        <span class="tab-text">Настройки</span>
       </button>
     </nav>
 
-    <div id="shiftModal" class="modal hidden" aria-hidden="true">
-      <div class="modal-card glass-panel">
-        <div class="modal-header">
-          <h3 id="modalDateLabel">Дата</h3>
-          <button class="close-btn" id="closeModalBtn" aria-label="Закрыть">×</button>
-        </div>
+    <div id="sheetBackdrop" class="sheet-backdrop hidden" aria-hidden="true"></div>
 
-        <form id="shiftForm">
+    <aside id="shiftSheet" class="bottom-sheet hidden" aria-hidden="true">
+      <div class="sheet-handle" aria-hidden="true"></div>
+      <div class="sheet-header">
+        <h3 id="sheetTitle">Добавить смену</h3>
+        <button class="close-btn" id="closeShiftSheet" type="button" aria-label="Закрыть">×</button>
+      </div>
+
+      <div class="sheet-body">
+        <label>
+          <span>Работа</span>
+          <select id="shiftWorkSelect"></select>
+        </label>
+
+        <div id="hourlyFields" class="sheet-fields">
           <label>
-            <span>Наименование смены</span>
-            <input type="text" id="shiftName" placeholder="Ночная смена" />
+            <span>Часов за смену</span>
+            <input id="shiftHoursInput" type="number" min="0" step="0.5" value="8" />
           </label>
-
-          <label>
-            <span>Количество часов</span>
-            <input type="number" id="shiftHours" min="0" step="0.5" />
-          </label>
-
-          <label>
+          <div class="inline-metric">
             <span>Доход</span>
-            <input type="number" id="shiftIncome" min="0" step="1" />
-          </label>
-
-          <label class="checkbox-row">
-            <input type="checkbox" id="isWeekend" />
-            <span>Выходной день</span>
-          </label>
-
-          <div class="modal-actions">
-            <button type="button" id="deleteShiftBtn" class="danger-btn hidden">Удалить смену</button>
-            <button type="submit" class="primary-btn">Сохранить</button>
+            <strong id="liveIncomeValue">0 ₽</strong>
           </div>
-        </form>
-      </div>
-    </div>
+        </div>
 
-    <div id="termsModal" class="modal hidden" aria-hidden="true">
-      <div class="modal-card glass-panel terms-card">
-        <div class="modal-header">
-          <h3>Пользовательское соглашение</h3>
-          <button class="close-btn" id="closeTermsBtn" aria-label="Закрыть">×</button>
-        </div>
-        <div class="terms-content">
-          <p>
-            Настоящее приложение предназначено для учета рабочих смен, расчета часов и дохода. Пользователь несет полную ответственность за точность введённых данных. Разработчик не несёт ответственности за потерю данных. Все данные хранятся локально в браузере пользователя.
-          </p>
-          <p>
-            При использовании приложения вы соглашаетесь с условиями данного соглашения.
-          </p>
+        <div id="fixedFields" class="sheet-fields hidden">
+          <button id="fixedShiftBtn" class="primary-btn wide" type="button">Добавить смену</button>
+          <button id="weekendBtn" class="secondary-btn wide" type="button">Выходной</button>
         </div>
       </div>
-    </div>
+    </aside>
+
+    <aside id="graphSheet" class="bottom-sheet hidden" aria-hidden="true">
+      <div class="sheet-handle" aria-hidden="true"></div>
+      <div class="sheet-header">
+        <h3>График</h3>
+        <button class="close-btn" id="closeGraphSheet" type="button" aria-label="Закрыть">×</button>
+      </div>
+
+      <div class="sheet-body graph-sheet-body">
+        <label>
+          <span>Место работы</span>
+          <select id="graphWorkSelect"></select>
+        </label>
+
+        <div class="preset-grid">
+          <button class="preset-btn active" data-preset="2/2" type="button">2/2</button>
+          <button class="preset-btn" data-preset="3/3" type="button">3/3</button>
+          <button class="preset-btn" data-preset="4/3" type="button">4/3</button>
+          <button class="preset-btn" data-preset="5/2" type="button">5/2</button>
+          <button class="preset-btn wide" data-preset="custom" type="button">Свой вариант</button>
+        </div>
+
+        <div id="customConfig" class="custom-config hidden">
+          <div class="stepper-row">
+            <label>
+              <span>Смен подряд</span>
+              <input id="shiftSequenceInput" type="number" min="1" max="14" value="3" />
+            </label>
+            <label>
+              <span>Выходных подряд</span>
+              <input id="restSequenceInput" type="number" min="1" max="14" value="2" />
+            </label>
+          </div>
+        </div>
+
+        <label>
+          <span>Начиная с даты</span>
+          <input id="graphStartDate" type="date" />
+        </label>
+
+        <div class="segmented-row">
+          <span>Заполнить</span>
+          <div class="segmented-control">
+            <button class="segment-btn active" data-fill="month" type="button">До конца месяца</button>
+            <button class="segment-btn" data-fill="week" type="button">До конца недели</button>
+          </div>
+        </div>
+
+        <label>
+          <span>Часов за смену</span>
+          <input id="graphHoursInput" type="number" min="1" step="0.5" value="8" />
+        </label>
+
+        <button id="applyGraphBtn" class="primary-btn wide" type="button">Применить</button>
+      </div>
+    </aside>
 
     <script src="app.js"></script>
   </body>
