@@ -3,49 +3,54 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Shift Flow</title>
+    <title>ShiftFlow</title>
+    <meta name="theme-color" content="#0d1022" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <div class="app-shell">
-      <header class="topbar">
-        <div class="brand">
-          <div class="logo-wrap" aria-label="Shift Flow logo">
-            <svg class="logo-svg" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Shift Flow logo">
-              <defs>
-                <linearGradient id="logoGradient" x1="0%" x2="100%" y1="0%" y2="100%">
-                  <stop offset="0%" stop-color="#B9E7FF"/>
-                  <stop offset="35%" stop-color="#9DC7FF"/>
-                  <stop offset="65%" stop-color="#8E8CFF"/>
-                  <stop offset="100%" stop-color="#6FE3C2"/>
-                </linearGradient>
-              </defs>
-              <rect x="14" y="14" width="92" height="92" rx="28" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.5)"/>
-              <path d="M35 64C46 49 58 40 75 40C85 40 91 43 95 48C89 44 82 42 75 42C58 42 48 51 43 64C40 72 38 80 35 87C31 80 30 71 35 64Z" fill="url(#logoGradient)" opacity="0.9"/>
-              <circle cx="60" cy="62" r="24" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.7)" stroke-width="2"/>
-              <path d="M60 62V46" stroke="rgba(255,255,255,0.92)" stroke-width="3" stroke-linecap="round"/>
-              <path d="M60 62L71 69" stroke="rgba(255,255,255,0.92)" stroke-width="3" stroke-linecap="round"/>
-              <circle cx="60" cy="62" r="5" fill="rgba(255,255,255,0.92)"/>
-              <path d="M18 86C30 71 39 63 52 57" stroke="rgba(255,255,255,0.45)" stroke-width="3" stroke-linecap="round" fill="none"/>
-            </svg>
-          </div>
-
-          <div class="brand-copy">
-            <h1>Shift Flow</h1>
-            <p class="tagline">Твой поток смен — под контролем</p>
+      <header class="topbar glass-panel">
+        <div class="brand-block">
+          <div class="brand-mark">SF</div>
+          <div>
+            <div class="eyebrow">ShiftFlow</div>
+            <h1>Учёт смен</h1>
           </div>
         </div>
+
+        <button id="openGraphSheet" class="graph-fab" type="button" aria-label="График">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="3" y="3" width="7" height="7" rx="2"></rect>
+            <rect x="14" y="3" width="7" height="4" rx="2"></rect>
+            <rect x="14" y="11" width="7" height="10" rx="2"></rect>
+            <rect x="3" y="12" width="7" height="9" rx="2"></rect>
+          </svg>
+        </button>
       </header>
 
-      <main class="page" id="mainPage">
-        <section class="calendar-panel glass-panel">
-          <div class="calendar-header">
-            <button id="prevMonth" class="icon-btn" type="button" aria-label="Предыдущий месяц">‹</button>
-            <h2 id="monthLabel">Месяц</h2>
-            <button id="nextMonth" class="icon-btn" type="button" aria-label="Следующий месяц">›</button>
-          </div>
+      <main class="page active" id="mainPage">
+        <section class="kpi-strip">
+          <article class="kpi glass-panel">
+            <span class="kpi-label">Доход</span>
+            <strong id="sumIncome">0 ₽</strong>
+          </article>
+          <article class="kpi glass-panel">
+            <span class="kpi-label">Смены</span>
+            <strong id="sumShifts">0</strong>
+          </article>
+          <article class="kpi glass-panel">
+            <span class="kpi-label">Часы</span>
+            <strong id="sumHours">0</strong>
+          </article>
+        </section>
 
-          <div class="calendar-weekdays">
+        <section class="calendar-card glass-panel">
+          <div class="section-head">
+            <button class="nav-chevron" id="prevMonthBtn" type="button" aria-label="Предыдущий месяц">‹</button>
+            <h2 id="monthLabel">Месяц</h2>
+            <button class="nav-chevron" id="nextMonthBtn" type="button" aria-label="Следующий месяц">›</button>
+          </div>
+          <div class="weekdays">
             <span>Пн</span>
             <span>Вт</span>
             <span>Ср</span>
@@ -54,187 +59,227 @@
             <span>Сб</span>
             <span>Вс</span>
           </div>
-
           <div id="calendarGrid" class="calendar-grid"></div>
         </section>
 
-        <section class="stats">
-          <article class="stat-card glass-panel">
-            <div class="stat-head">
-              <div class="stat-icon stat-clock" aria-hidden="true">
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="12" cy="12" r="8.5"/>
-                  <path d="M12 7v5l3.5 2.2"/>
-                </svg>
-              </div>
-              <span class="stat-label">Часы</span>
-            </div>
-            <strong id="totalHours">0</strong>
-          </article>
-
-          <article class="stat-card glass-panel">
-            <div class="stat-head">
-              <div class="stat-icon stat-shifts" aria-hidden="true">
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <rect x="3.5" y="5" width="17" height="15.5" rx="3"/>
-                  <path d="M8 3.5v3M16 3.5v3M3.5 9.5h17"/>
-                  <path d="M8.5 13.5h2.5v2.5H8.5zm4 0h2.5v2.5h-2.5z"/>
-                </svg>
-              </div>
-              <span class="stat-label">Смены</span>
-            </div>
-            <strong id="totalShifts">0</strong>
-          </article>
-
-          <article class="stat-card glass-panel">
-            <div class="stat-head">
-              <div class="stat-icon stat-income" aria-hidden="true">
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="12" cy="13.5" r="5.5"/>
-                  <path d="M14.5 6.5h1.8A2.7 2.7 0 0 1 19 9.2v.8"/>
-                  <path d="M8 8.8V7.2A2.2 2.2 0 0 1 10.2 5h2.6A2.2 2.2 0 0 1 15 7.2v1.6"/>
-                  <path d="M6 18.5h12"/>
-                </svg>
-              </div>
-              <span class="stat-label">Доход</span>
-            </div>
-            <strong id="totalIncome">0 ₽</strong>
-          </article>
+        <section class="work-grid-wrap">
+          <div class="section-head compact">
+            <h3>Работы</h3>
+            <button class="ghost-btn" id="addShiftQuick" type="button">+ смена</button>
+          </div>
+          <div id="workGrid" class="work-grid"></div>
         </section>
       </main>
 
-      <main class="page hidden" id="reportsPage">
+      <main class="page" id="reportsPage">
         <section class="report-panel glass-panel">
-          <div class="report-header">
-            <button id="reportPrevMonth" class="icon-btn" type="button">‹</button>
-            <h2 id="reportMonthLabel">Месяц</h2>
-            <button id="reportNextMonth" class="icon-btn" type="button">›</button>
+          <div class="section-head">
+            <h2>Отчёты</h2>
           </div>
-          <div id="reportSummary" class="report-summary"></div>
+          <div id="reportList" class="report-list"></div>
+        </section>
+
+        <section class="year-panel glass-panel">
+          <div class="section-head">
+            <button class="nav-chevron" id="prevYearBtn" type="button">‹</button>
+            <h2 id="yearLabelReports">2026</h2>
+            <button class="nav-chevron" id="nextYearBtn" type="button">›</button>
+          </div>
+          <div class="year-chart" id="yearChart"></div>
+          <div class="year-total-row">
+            <span>Итог за год</span>
+            <strong id="yearTotalValue">0 ₽</strong>
+          </div>
         </section>
       </main>
 
-      <main class="page hidden" id="settingsPage">
+      <main class="page" id="settingsPage">
         <section class="settings-panel glass-panel">
-          <div class="settings-block">
-            <h3>Язык</h3>
-            <div class="option-group">
-              <button class="lang-toggle active" data-lang="ru" type="button">
-                <span class="flag">🇷🇺</span>
-                <span>Русский</span>
-              </button>
-              <button class="lang-toggle" data-lang="en" type="button">
-                <span class="flag">🇬🇧</span>
-                <span>English</span>
-              </button>
-            </div>
+          <div class="section-head compact">
+            <h2>Работы</h2>
+            <button class="ghost-btn" id="addWorkBtn" type="button">+ работа</button>
           </div>
-
-          <div class="settings-block">
-            <h3>Тема</h3>
-            <div class="option-group">
-              <button class="theme-toggle active" data-theme="light" type="button">
-                <span>☀️</span>
-                <span>Светлая</span>
-              </button>
-              <button class="theme-toggle" data-theme="dark" type="button">
-                <span>🌙</span>
-                <span>Тёмная</span>
-              </button>
-            </div>
-          </div>
-
-          <div class="settings-block">
-            <button id="openTermsBtn" class="terms-btn" type="button">📄 Пользовательское соглашение</button>
-          </div>
+          <div id="settingsList" class="settings-list"></div>
         </section>
       </main>
     </div>
 
-    <nav class="bottom-nav" aria-label="Нижняя навигация">
-      <button class="bottom-nav-link active" data-page="main" type="button" title="Главная">
-        <span class="nav-icon">
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
-          </svg>
-        </span>
-        <span class="nav-label">Главная</span>
+    <nav class="tab-bar glass-panel" aria-label="Навигация по вкладкам">
+      <button class="tab-button active" data-page="main" type="button">
+        <span class="tab-icon home">⌂</span>
+        <span>Главная</span>
       </button>
-      <button class="bottom-nav-link" data-page="reports" type="button" title="Отчёты">
-        <span class="nav-icon">
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <rect x="3" y="3" width="7" height="7" rx="1"/>
-            <rect x="14" y="3" width="7" height="7" rx="1"/>
-            <rect x="14" y="14" width="7" height="7" rx="1"/>
-            <rect x="3" y="14" width="7" height="7" rx="1"/>
-          </svg>
-        </span>
-        <span class="nav-label">Отчёты</span>
+      <button class="tab-button" data-page="reports" type="button">
+        <span class="tab-icon">▣</span>
+        <span>Отчёты</span>
       </button>
-      <button class="bottom-nav-link" data-page="settings" type="button" title="Настройки">
-        <span class="nav-icon">
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="12" cy="12" r="3"/>
-            <path d="M12 2v4m0 12v4M2 12h4m12 0h4M5.5 5.5l2.8 2.8m8.4 0l2.8-2.8M5.5 18.5l2.8-2.8m8.4 0l2.8 2.8"/>
-          </svg>
-        </span>
-        <span class="nav-label">Настройки</span>
+      <button class="tab-button" data-page="settings" type="button">
+        <span class="tab-icon">⚙</span>
+        <span>Настройки</span>
       </button>
     </nav>
 
-    <div id="shiftModal" class="modal hidden" aria-hidden="true">
-      <div class="modal-card glass-panel">
-        <div class="modal-header">
-          <h3 id="modalDateLabel">Дата</h3>
-          <button class="close-btn" id="closeModalBtn" aria-label="Закрыть">×</button>
+    <div id="sheetBackdrop" class="sheet-backdrop hidden"></div>
+
+    <aside id="shiftSheet" class="bottom-sheet hidden" aria-hidden="true">
+      <div class="sheet-grab"></div>
+      <div class="sheet-header">
+        <div>
+          <div class="eyebrow">Смена</div>
+          <h3 id="sheetTitle">Ночная смена</h3>
+        </div>
+        <button class="close-sheet" id="closeShiftSheet" type="button" aria-label="Закрыть">×</button>
+      </div>
+
+      <div class="sheet-body">
+        <div class="segmented" id="rateModeToggle">
+          <button class="segment active" data-mode="hourly" type="button">Почасовая</button>
+          <button class="segment" data-mode="fixed" type="button">Фиксированная</button>
         </div>
 
-        <form id="shiftForm">
-          <label>
-            <span>Наименование смены</span>
-            <input type="text" id="shiftName" placeholder="Ночная смена" />
+        <label class="field">
+          <span>Дата</span>
+          <input id="sheetDate" type="date" />
+        </label>
+
+        <div id="hourlyFields">
+          <label class="field">
+            <span>Часов</span>
+            <input id="sheetHours" type="number" min="0" step="0.5" value="8" />
+          </label>
+          <label class="field">
+            <span>Ставка</span>
+            <input id="sheetRate" type="number" min="0" step="50" value="400" />
+          </label>
+          <div class="live-row">
+            <span>Live доход</span>
+            <strong id="sheetIncomePreview">0 ₽</strong>
+          </div>
+        </div>
+
+        <div id="fixedFields" class="hidden">
+          <div class="fixed-actions">
+            <button class="primary-btn" id="addFixedShift" type="button">Добавить смену</button>
+            <button class="secondary-btn" id="markWeekend" type="button">Выходной</button>
+          </div>
+        </div>
+
+        <button class="primary-action" id="saveShiftBtn" type="button">Сохранить</button>
+      </div>
+    </aside>
+
+    <aside id="graphSheet" class="bottom-sheet hidden" aria-hidden="true">
+      <div class="sheet-grab"></div>
+      <div class="sheet-header">
+        <div>
+          <div class="eyebrow">График</div>
+          <h3>Подготовка смен</h3>
+        </div>
+        <button class="close-sheet" id="closeGraphSheet" type="button" aria-label="Закрыть">×</button>
+      </div>
+
+      <div class="sheet-body graph-sheet-body">
+        <div class="segmented" id="workSelector">
+          <button class="segment active" data-work-id="all" type="button">Все</button>
+        </div>
+
+        <div class="preset-grid">
+          <button class="preset-btn active" data-preset="2/2" type="button">2/2</button>
+          <button class="preset-btn" data-preset="3/3" type="button">3/3</button>
+          <button class="preset-btn" data-preset="4/3" type="button">4/3</button>
+          <button class="preset-btn" data-preset="5/2" type="button">5/2</button>
+          <button class="preset-btn" data-preset="custom" type="button">Свой</button>
+        </div>
+
+        <div class="field-row double">
+          <label class="field">
+            <span>Смен</span>
+            <input id="customShifts" type="number" min="0" value="4" />
+          </label>
+          <label class="field">
+            <span>Выходных</span>
+            <input id="customDaysOff" type="number" min="0" value="3" />
+          </label>
+        </div>
+
+        <label class="field">
+          <span>Дата старта</span>
+          <input id="graphStartDate" type="date" />
+        </label>
+
+        <div class="field-row double">
+          <label class="field">
+            <span>До конца месяца</span>
+            <input id="graphEndMonth" type="checkbox" checked />
+          </label>
+          <label class="field">
+            <span>До конца недели</span>
+            <input id="graphEndWeek" type="checkbox" />
+          </label>
+        </div>
+
+        <label class="field">
+          <span>Часов за смену</span>
+          <input id="graphShiftHours" type="number" min="1" step="0.5" value="8" />
+        </label>
+
+        <button class="primary-action gradient-btn" id="applyGraphBtn" type="button">Применить</button>
+      </div>
+    </aside>
+
+    <aside id="workModal" class="modal hidden" aria-hidden="true">
+      <div class="modal-panel glass-panel">
+        <div class="sheet-header">
+          <div>
+            <div class="eyebrow">Работа</div>
+            <h3 id="workModalTitle">Добавить работу</h3>
+          </div>
+          <button class="close-sheet" id="closeWorkModal" type="button" aria-label="Закрыть">×</button>
+        </div>
+
+        <form id="workForm" class="modal-form">
+          <label class="field">
+            <span>Название</span>
+            <input id="workNameInput" type="text" maxlength="28" placeholder="Ночная смена" />
           </label>
 
-          <label>
-            <span>Количество часов</span>
-            <input type="number" id="shiftHours" min="0" step="0.5" />
-          </label>
+          <div class="field-row double">
+            <label class="field">
+              <span>Цвет</span>
+              <input id="workColorInput" type="color" value="#7dd3fc" />
+            </label>
+            <label class="field">
+              <span>Валюта</span>
+              <select id="workCurrencyInput">
+                <option value="₽">₽</option>
+                <option value="$">$</option>
+                <option value="€">€</option>
+                <option value="₸">₸</option>
+                <option value="₴">₴</option>
+                <option value="¥">¥</option>
+                <option value="£">£</option>
+              </select>
+            </label>
+          </div>
 
-          <label>
-            <span>Доход</span>
-            <input type="number" id="shiftIncome" min="0" step="1" />
-          </label>
+          <div class="segmented" id="workTypeToggle">
+            <button class="segment active" data-type="hourly" type="button">Почасовая</button>
+            <button class="segment" data-type="fixed" type="button">Фиксированная</button>
+          </div>
 
-          <label class="checkbox-row">
-            <input type="checkbox" id="isWeekend" />
-            <span>Выходной день</span>
+          <label class="field">
+            <span>Ставка</span>
+            <input id="workRateInput" type="number" min="0" step="50" value="400" />
           </label>
 
           <div class="modal-actions">
-            <button type="button" id="deleteShiftBtn" class="danger-btn hidden">Удалить смену</button>
-            <button type="submit" class="primary-btn">Сохранить</button>
+            <button class="danger-btn hidden" id="deleteWorkBtn" type="button">Удалить</button>
+            <button class="primary-action" type="submit">Сохранить</button>
           </div>
         </form>
       </div>
-    </div>
-
-    <div id="termsModal" class="modal hidden" aria-hidden="true">
-      <div class="modal-card glass-panel terms-card">
-        <div class="modal-header">
-          <h3>Пользовательское соглашение</h3>
-          <button class="close-btn" id="closeTermsBtn" aria-label="Закрыть">×</button>
-        </div>
-        <div class="terms-content">
-          <p>
-            Настоящее приложение предназначено для учета рабочих смен, расчета часов и дохода. Пользователь несет полную ответственность за точность введённых данных. Разработчик не несёт ответственности за потерю данных. Все данные хранятся локально в браузере пользователя.
-          </p>
-          <p>
-            При использовании приложения вы соглашаетесь с условиями данного соглашения.
-          </p>
-        </div>
-      </div>
-    </div>
-
-    <script src="app.js"></script>
+    </aside>
   </body>
+
+  <script src="app.js"></script>
 </html>
