@@ -17,7 +17,9 @@
   --danger: #ff6363;
   --warning: #ffb14c;
   --success: #52d7a4;
-  --nav-glow: rgba(120, 153, 255, 0.28);
+  --cyan-glow: rgba(120, 200, 255, 0.32);
+  --purple-glow: rgba(167, 139, 250, 0.28);
+  --amber-glow: rgba(255, 173, 102, 0.26);
 }
 
 body[data-theme="dark"] {
@@ -35,7 +37,9 @@ body[data-theme="dark"] {
   --danger: #ff8d8d;
   --warning: #ffc260;
   --success: #58dfb8;
-  --nav-glow: rgba(116, 149, 255, 0.3);
+  --cyan-glow: rgba(108, 190, 255, 0.35);
+  --purple-glow: rgba(159, 139, 255, 0.32);
+  --amber-glow: rgba(255, 180, 120, 0.28);
 }
 
 html, body {
@@ -52,7 +56,7 @@ html, body {
 body {
   min-height: 100vh;
   padding: 18px 16px 110px;
-  transition: background 0.7s ease;
+  transition: background 0.72s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 button, input, select {
@@ -89,7 +93,8 @@ button:focus-visible, input:focus-visible, select:focus-visible {
 .glass-panel {
   background: linear-gradient(180deg, rgba(255,255,255,0.18), rgba(255,255,255,0.06));
   border: 1px solid var(--border);
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow),
+    inset 0 1px 0 rgba(255,255,255,0.42);
   backdrop-filter: blur(18px) saturate(1.2);
   -webkit-backdrop-filter: blur(18px) saturate(1.2);
 }
@@ -161,11 +166,15 @@ button:focus-visible, input:focus-visible, select:focus-visible {
   display: grid;
   place-items: center;
   z-index: 1;
-  transition: transform 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .theme-toggle-btn:hover {
   transform: scale(1.04);
+}
+
+.theme-toggle-btn:active {
+  transform: scale(0.96);
 }
 
 .theme-icon {
@@ -178,7 +187,7 @@ button:focus-visible, input:focus-visible, select:focus-visible {
   height: 8px;
   left: var(--x, 50%);
   top: var(--y, 50%);
-  background: radial-gradient(circle at center, rgba(255,255,255,0.7), rgba(122,160,255,0.9) 28%, rgba(92,110,220,0.78) 45%, transparent 70%);
+  background: radial-gradient(circle at center, rgba(255,255,255,0.8), rgba(122,160,255,0.95) 28%, rgba(92,110,220,0.85) 45%, transparent 70%);
   border-radius: 50%;
   transform: translate(-50%, -50%);
   pointer-events: none;
@@ -187,25 +196,37 @@ button:focus-visible, input:focus-visible, select:focus-visible {
 }
 
 .theme-reveal.animate {
-  animation: themeBurst 0.72s ease-in-out forwards;
+  animation: themeBurst 0.72s cubic-bezier(0.2, 0.6, 0.3, 1) forwards;
 }
 
 @keyframes themeBurst {
   0% {
-    opacity: 0.8;
-    transform: translate(-50%, -50%) scale(0.2);
+    opacity: 0.9;
+    transform: translate(-50%, -50%) scale(0.15);
   }
-  50% {
+  40% {
     opacity: 1;
   }
   100% {
     opacity: 0;
-    transform: translate(-50%, -50%) scale(60);
+    transform: translate(-50%, -50%) scale(65);
   }
 }
 
 .page-view {
   display: block;
+  animation: pageSlide 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes pageSlide {
+  from {
+    opacity: 0.6;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .page-view.hidden {
@@ -216,7 +237,7 @@ button:focus-visible, input:focus-visible, select:focus-visible {
   background: linear-gradient(180deg, rgba(255,255,255,0.16), rgba(255,255,255,0.08));
   border: 1px solid var(--border);
   border-radius: 28px;
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow), inset 0 1px 0 rgba(255,255,255,0.42);
   backdrop-filter: blur(18px) saturate(1.2);
   -webkit-backdrop-filter: blur(18px) saturate(1.2);
   padding: 18px 16px 14px;
@@ -253,11 +274,15 @@ button:focus-visible, input:focus-visible, select:focus-visible {
   place-items: center;
   font-size: 1.7rem;
   color: var(--text);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.18s cubic-bezier(0.24, 0.88, 0.42, 1), box-shadow 0.18s ease;
+}
+
+.icon-btn:hover {
+  background: rgba(255,255,255,0.14);
 }
 
 .icon-btn:active {
-  transform: scale(0.96);
+  transform: scale(0.94);
 }
 
 .graph-btn {
@@ -299,7 +324,9 @@ button:focus-visible, input:focus-visible, select:focus-visible {
   justify-content: space-between;
   gap: 6px;
   text-align: left;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.2s cubic-bezier(0.24, 0.88, 0.42, 1),
+    box-shadow 0.2s ease,
+    background 0.2s ease;
 }
 
 .day-cell.empty {
@@ -315,8 +342,13 @@ button:focus-visible, input:focus-visible, select:focus-visible {
   box-shadow: inset 0 0 0 1px rgba(118, 139, 255, 0.4), 0 0 0 1px rgba(118, 139, 255, 0.15);
 }
 
-.day-cell:active {
-  transform: scale(0.98);
+.day-cell:hover:not(.empty) {
+  background: linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.05));
+  box-shadow: 0 8px 20px rgba(118, 139, 255, 0.12);
+}
+
+.day-cell:active:not(.empty) {
+  transform: scale(0.96);
 }
 
 .day-number {
@@ -352,6 +384,56 @@ button:focus-visible, input:focus-visible, select:focus-visible {
   font-size: 0.66rem;
 }
 
+.work-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.work-grid-card {
+  display: grid;
+  gap: 10px;
+  padding: 16px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: linear-gradient(180deg, rgba(255,255,255,0.1), rgba(255,255,255,0.04));
+  text-align: left;
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+}
+
+.work-grid-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 24px rgba(90, 110, 178, 0.12);
+}
+
+.work-grid-card:active {
+  transform: scale(0.96);
+}
+
+.work-grid-card-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.work-grid-card .swatch {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  box-shadow: 0 0 18px rgba(255,255,255,0.24);
+}
+
+.work-grid-card h4 {
+  margin: 0;
+  font-size: 0.96rem;
+}
+
+.work-grid-card .meta {
+  color: var(--muted);
+  font-size: 0.76rem;
+}
+
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0,1fr));
@@ -364,7 +446,7 @@ button:focus-visible, input:focus-visible, select:focus-visible {
   border-radius: 22px;
   border: 1px solid var(--border);
   background: linear-gradient(180deg, rgba(255,255,255,0.1), rgba(255,255,255,0.04));
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.34);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.34), 0 8px 16px rgba(0,0,0,0.04);
 }
 
 .stat-top {
@@ -577,6 +659,12 @@ button:focus-visible, input:focus-visible, select:focus-visible {
   border-radius: 24px;
   border: 1px solid var(--border);
   background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04));
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.work-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(100, 115, 146, 0.12);
 }
 
 .work-head {
@@ -598,7 +686,8 @@ button:focus-visible, input:focus-visible, select:focus-visible {
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  box-shadow: 0 0 18px color-mix(in srgb, currentColor 50%, transparent);
+  box-shadow: 0 0 18px rgba(255,255,255,0.2);
+  flex-shrink: 0;
 }
 
 .work-title-wrap strong {
@@ -612,6 +701,11 @@ button:focus-visible, input:focus-visible, select:focus-visible {
   background: rgba(255, 99, 99, 0.12);
   color: var(--danger);
   font-weight: 700;
+  transition: all 0.2s ease;
+}
+
+.delete-work-btn:hover {
+  background: rgba(255, 99, 99, 0.18);
 }
 
 .work-grid {
@@ -651,11 +745,22 @@ button:focus-visible, input:focus-visible, select:focus-visible {
   border: 2px solid transparent;
   box-shadow: 0 0 0 1px rgba(255,255,255,0.2);
   position: relative;
+  transition: all 0.24s cubic-bezier(0.2, 0.8, 0.2, 1);
+  cursor: pointer;
+}
+
+.color-swatch:hover {
+  transform: scale(1.12);
+}
+
+.color-swatch:active {
+  transform: scale(0.92);
 }
 
 .color-swatch.selected {
   border-color: rgba(255,255,255,0.9);
   box-shadow: 0 0 0 2px rgba(255,255,255,0.12), 0 0 16px rgba(255,255,255,0.35);
+  transform: scale(1.15);
 }
 
 .type-switch {
@@ -749,7 +854,16 @@ button:focus-visible, input:focus-visible, select:focus-visible {
   background: linear-gradient(135deg, rgba(110,170,255,0.22), rgba(138,125,255,0.15));
   border: 1px solid rgba(255,255,255,0.16);
   box-shadow: 0 12px 28px rgba(124,149,255,0.18);
-  transition: transform 0.38s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.3s ease;
+  transition: transform 0.38s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.3s ease, box-shadow 0.3s ease;
+}
+
+.tabbar::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, rgba(255,255,255,0.16), transparent 35%, rgba(255,255,255,0.08));
+  border-radius: inherit;
+  pointer-events: none;
 }
 
 .tab-item {
@@ -765,26 +879,11 @@ button:focus-visible, input:focus-visible, select:focus-visible {
   font-weight: 700;
   color: var(--muted);
   letter-spacing: 0.01em;
-  transition: color 0.2s ease;
+  transition: color 0.24s ease;
 }
 
 .tab-item.active {
   color: var(--text);
-}
-
-.tab-item[data-tab="main"].active ~ .tab-indicator,
-.tabbar .tab-indicator[data-active="main"] {
-  transform: translateX(0%);
-}
-
-.tab-item[data-tab="reports"].active ~ .tab-indicator,
-.tabbar .tab-indicator[data-active="reports"] {
-  transform: translateX(100%);
-}
-
-.tab-item[data-tab="settings"].active ~ .tab-indicator,
-.tabbar .tab-indicator[data-active="settings"] {
-  transform: translateX(200%);
 }
 
 .tab-icon {
@@ -802,6 +901,18 @@ button:focus-visible, input:focus-visible, select:focus-visible {
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   z-index: 110;
+  animation: backdropFade 0.28s ease-in-out forwards;
+}
+
+@keyframes backdropFade {
+  from {
+    opacity: 0;
+    backdrop-filter: blur(0px);
+  }
+  to {
+    opacity: 1;
+    backdrop-filter: blur(12px);
+  }
 }
 
 .bottom-sheet {
@@ -818,6 +929,18 @@ button:focus-visible, input:focus-visible, select:focus-visible {
   box-shadow: 0 30px 80px rgba(10, 17, 25, 0.28);
   padding: 12px 18px 18px;
   z-index: 120;
+  animation: sheetSlide 0.32s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes sheetSlide {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
 }
 
 .hidden {
@@ -854,6 +977,15 @@ button:focus-visible, input:focus-visible, select:focus-visible {
   border: 1px solid var(--border);
   font-size: 1.5rem;
   color: var(--text);
+  transition: all 0.2s ease;
+}
+
+.close-btn:hover {
+  background: rgba(255,255,255,0.14);
+}
+
+.close-btn:active {
+  transform: scale(0.92);
 }
 
 .sheet-body {
@@ -961,7 +1093,8 @@ button:focus-visible, input:focus-visible, select:focus-visible {
   .month-metrics,
   .year-summary-grid,
   .field-row,
-  .stepper-row {
+  .stepper-row,
+  .work-cards-grid {
     grid-template-columns: 1fr 1fr;
   }
 
@@ -979,7 +1112,8 @@ button:focus-visible, input:focus-visible, select:focus-visible {
   .month-metrics,
   .year-summary-grid,
   .field-row,
-  .stepper-row {
+  .stepper-row,
+  .work-cards-grid {
     grid-template-columns: 1fr;
   }
 

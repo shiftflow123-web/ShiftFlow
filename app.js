@@ -166,19 +166,33 @@ function triggerThemeReveal(x, y) {
 
 function setTab(tabName) {
   state.activeTab = tabName;
+  const indicator = document.querySelector(".tab-indicator");
+  const tabButtons = [...document.querySelectorAll(".tab-item")];
+  const index = tabButtons.findIndex((button) => button.dataset.tab === tabName);
+
+  if (indicator) {
+    const width = indicator.offsetWidth || 180;
+    indicator.style.transform = `translateX(${index * width}px)`;
+    const accentMap = {
+      main: "linear-gradient(135deg, rgba(124,200,255,0.28), rgba(102,185,255,0.2))",
+      reports: "linear-gradient(135deg, rgba(167,139,250,0.24), rgba(143,123,255,0.18))",
+      settings: "linear-gradient(135deg, rgba(255,173,102,0.24), rgba(255,157,82,0.18))",
+    };
+    indicator.style.background = accentMap[tabName] || accentMap.main;
+    indicator.style.boxShadow = tabName === "main"
+      ? "0 12px 28px var(--cyan-glow)"
+      : tabName === "reports"
+        ? "0 12px 28px var(--purple-glow)"
+        : "0 12px 28px var(--amber-glow)";
+  }
+
   document.querySelectorAll(".page-view").forEach((page) => {
     page.classList.toggle("hidden", page.id !== `page-${tabName}`);
   });
 
-  document.querySelectorAll(".tab-item").forEach((button) => {
-    const isActive = button.dataset.tab === tabName;
-    button.classList.toggle("active", isActive);
+  tabButtons.forEach((button) => {
+    button.classList.toggle("active", button.dataset.tab === tabName);
   });
-
-  const indicator = document.querySelector(".tab-indicator");
-  if (indicator) {
-    indicator.setAttribute("data-active", tabName);
-  }
 }
 
 function renderMainCalendar() {
@@ -253,16 +267,34 @@ function renderMainCalendar() {
   });
 }
 
+function renderHomeWorkCards() {
+  const grid = document.getElementById("workCardsGrid");
+  if (!grid) return;
+
+  grid.innerHTML = state.works.map((work) => `
+    <button class="work-grid-card" type="button" data-work-id="${work.id}">
+      <div class="work-grid-card-head">
+        <span class="swatch" style="background:${work.color};"></span>
+        <h4>${work.name}</h4>
+      </div>
+      <div class="meta">${work.type === "hourly" ? `${work.hourlyRate} ₽/ч` : `${work.fixedRate} ₽ / смена`}</div>
+    </button>
+  `).join("");
+
+  grid.querySelectorAll(".work-grid-card").forEach((button) => {
+    button.addEventListener("click", () => openShiftSheet(null, button.dataset.workId));
+  });
+}
+
 function renderMainStats() {
   const statsContainer = document.getElementById("mainStats");
   if (!statsContainer) return;
 
-  const totalHours = state.shifts
-    .filter((shift) => shift.date.startsWith(`${state.currentMonth.getFullYear()}-${String(state.currentMonth.getMonth() + 1).padStart(2, "0")}`))
-    .reduce((sum, shift) => sum + Number(shift.hours || 0), 0);
-
-  const totalShifts = state.shifts.filter((shift) => shift.date.startsWith(`${state.currentMonth.getFullYear()}-${String(state.currentMonth.getMonth() + 1).padStart(2, "0")}`)).length;
-  const totalIncome = state.shifts.filter((shift) => shift.date.startsWith(`${state.currentMonth.getFullYear()}-${String(state.currentMonth.getMonth() + 1).padStart(2, "0")}`)).reduce((sum, shift) => sum + Number(shift.income || 0), 0);
+  const monthKey = `${state.currentMonth.getFullYear()}-${String(state.currentMonth.getMonth() + 1).padStart(2, "0")}`;
+  const monthShifts = state.shifts.filter((shift) => shift.date.startsWith(monthKey));
+  const totalHours = monthShifts.reduce((sum, shift) => sum + Number(shift.hours || 0), 0);
+  const totalShifts = monthShifts.length;
+  const totalIncome = monthShifts.reduce((sum, shift) => sum + Number(shift.income || 0), 0);
 
   const cards = [
     { icon: "⏱", title: "Часы", value: totalHours },
@@ -290,10 +322,7 @@ function buildMonthlyReportData(year) {
     const income = monthShifts.reduce((sum, shift) => sum + Number(shift.income || 0), 0);
     const shifts = monthShifts.length;
     const hours = monthShifts.reduce((sum, shift) => sum + Number(shift.hours || 0), 0);
-    const weekends = monthShifts.filter((shift) => {
-      const date = toDate(shift.date);
-      return isWeekendDate(date);
-    }).length;
+    const weekends = monthShifts.filter((shift) => isWeekendDate(toDate(shift.date))).length;
 
     months.push({
       label: monthName(monthDate),
@@ -315,13 +344,8 @@ function renderReports() {
   const yearSummary = document.getElementById("yearSummary");
   const yearSummaryTitle = document.getElementById("yearSummaryTitle");
 
-  if (yearLabel) {
-    yearLabel.textContent = String(state.reportYear);
-  }
-
-  if (yearSummaryTitle) {
-    yearSummaryTitle.textContent = String(state.reportYear);
-  }
+  if (yearLabel) yearLabel.textContent = String(state.reportYear);
+  if (yearSummaryTitle) yearSummaryTitle.textContent = String(state.reportYear);
 
   if (reportCards) {
     reportCards.innerHTML = summary.map((item) => `
@@ -471,6 +495,8 @@ function renderWorksList() {
       work.color = color;
       saveWorks();
       renderWorksList();
+      renderHomeWorkCards();
+      renderMainCalendar();
       vibrate([25]);
     });
   });
@@ -482,6 +508,7 @@ function renderWorksList() {
       work.type = button.dataset.type;
       saveWorks();
       renderWorksList();
+      renderHomeWorkCards();
       vibrate([20]);
     });
   });
@@ -504,6 +531,8 @@ function renderWorksList() {
       }
 
       saveWorks();
+      renderHomeWorkCards();
+      renderMainCalendar();
     });
   });
 
@@ -515,6 +544,7 @@ function renderWorksList() {
       saveWorks();
       saveShifts();
       renderWorksList();
+      renderHomeWorkCards();
       renderMainCalendar();
       renderMainStats();
       renderReports();
@@ -532,7 +562,7 @@ function escapeHtml(value) {
     .replace(/'/g, "&#039;");
 }
 
-function openShiftSheet(dateKey) {
+function openShiftSheet(dateKey = null, workId = null) {
   state.selectedDate = dateKey;
   const sheet = document.getElementById("shiftSheet");
   const backdrop = document.getElementById("sheetBackdrop");
@@ -541,29 +571,28 @@ function openShiftSheet(dateKey) {
   const liveIncome = document.getElementById("liveIncomeValue");
   const hourlyFields = document.getElementById("hourlyFields");
   const fixedFields = document.getElementById("fixedFields");
+  const title = document.getElementById("sheetTitle");
 
-  if (!sheet || !select || !hoursInput || !liveIncome) return;
+  if (!sheet || !select || !hoursInput || !liveIncome || !title) return;
 
-  const workOptions = state.works.map((work) => `
+  const selectedWork = workId ? getWorkById(workId) : (dateKey ? getShiftForDate(dateKey)?.workId : null);
+  state.selectedWorkId = workId || selectedWork || state.works[0]?.id || null;
+
+  select.innerHTML = state.works.map((work) => `
     <option value="${work.id}">${work.name}</option>
   `).join("");
-  select.innerHTML = workOptions;
+  select.value = state.selectedWorkId || state.works[0]?.id || "";
 
-  const existing = getShiftForDate(dateKey);
-  state.selectedWorkId = existing ? existing.workId : (state.works[0] ? state.works[0].id : "");
-  if (state.selectedWorkId) {
-    select.value = state.selectedWorkId;
-  }
-
-  const work = getWorkById(state.selectedWorkId);
+  const work = getWorkById(select.value);
   if (work) {
+    const existing = dateKey ? getShiftForDate(dateKey) : null;
     hoursInput.value = existing && existing.type === "hourly" ? (existing.hours || 8) : 8;
+    title.textContent = dateKey ? `Смена · ${new Date(`${dateKey}T00:00:00`).toLocaleDateString("ru-RU", { day: "numeric", month: "long" })}` : `Добавить · ${work.name}`;
+    const isHourly = work.type === "hourly";
+    hourlyFields.classList.toggle("hidden", !isHourly);
+    fixedFields.classList.toggle("hidden", isHourly);
     updateLiveIncome();
   }
-
-  const showHourly = work ? work.type === "hourly" : true;
-  hourlyFields.classList.toggle("hidden", !showHourly);
-  fixedFields.classList.toggle("hidden", showHourly);
 
   sheet.classList.remove("hidden");
   backdrop.classList.remove("hidden");
@@ -572,13 +601,12 @@ function openShiftSheet(dateKey) {
 
   select.onchange = () => {
     state.selectedWorkId = select.value;
-    const selectedWork = getWorkById(state.selectedWorkId);
-    if (!selectedWork) return;
-    const haveExisting = getShiftForDate(dateKey);
-    const isHourly = selectedWork.type === "hourly";
-    hourlyFields.classList.toggle("hidden", !isHourly);
-    fixedFields.classList.toggle("hidden", isHourly);
-    hoursInput.value = haveExisting && haveExisting.type === "hourly" ? haveExisting.hours || 8 : 8;
+    const selected = getWorkById(state.selectedWorkId);
+    if (!selected) return;
+    const isHourly = selected.type === "hourly";
+    document.getElementById("hourlyFields").classList.toggle("hidden", !isHourly);
+    document.getElementById("fixedFields").classList.toggle("hidden", isHourly);
+    title.textContent = dateKey ? `Смена · ${new Date(`${dateKey}T00:00:00`).toLocaleDateString("ru-RU", { day: "numeric", month: "long" })}` : `Добавить · ${selected.name}`;
     updateLiveIncome();
   };
 
@@ -603,21 +631,17 @@ function updateLiveIncome() {
 
 function applyShiftToDate(isWeekend) {
   const dateKey = state.selectedDate;
-  if (!dateKey) return;
-
-  const work = getWorkById(state.selectedWorkId || document.getElementById("shiftWorkSelect")?.value);
+  const workId = state.selectedWorkId || document.getElementById("shiftWorkSelect")?.value;
+  const work = getWorkById(workId);
   if (!work) return;
 
   const shiftHours = Number(document.getElementById("shiftHoursInput")?.value || 0);
 
   if (isWeekend) {
-    const existing = getShiftForDate(dateKey);
-    if (existing) {
-      state.shifts = state.shifts.filter((shift) => shift.date !== dateKey);
-    }
+    state.shifts = state.shifts.filter((shift) => shift.date !== dateKey);
     state.shifts.push({
       id: uuid(),
-      date: dateKey,
+      date: dateKey || getDateKey(new Date()),
       workId: work.id,
       type: work.type,
       hours: 0,
@@ -629,7 +653,7 @@ function applyShiftToDate(isWeekend) {
     state.shifts = state.shifts.filter((shift) => shift.date !== dateKey);
     state.shifts.push({
       id: uuid(),
-      date: dateKey,
+      date: dateKey || getDateKey(new Date()),
       workId: work.id,
       type: work.type,
       hours: work.type === "hourly" ? shiftHours : 8,
@@ -694,18 +718,13 @@ function applyGraphPreset() {
   const baseDate = new Date(`${startDate}T00:00:00`);
   const fillMode = state.fillMode || "month";
   const preset = state.selectedPreset || "2/2";
-  let shiftsCount = 0;
-
   let cycle = [];
-  if (preset === "2/2") {
-    cycle = [1, 1, 0, 0];
-  } else if (preset === "3/3") {
-    cycle = [1, 1, 1, 0, 0, 0];
-  } else if (preset === "4/3") {
-    cycle = [1, 1, 1, 1, 0, 0, 0];
-  } else if (preset === "5/2") {
-    cycle = [1, 1, 1, 1, 1, 0, 0];
-  } else {
+
+  if (preset === "2/2") cycle = [1, 1, 0, 0];
+  else if (preset === "3/3") cycle = [1, 1, 1, 0, 0, 0];
+  else if (preset === "4/3") cycle = [1, 1, 1, 1, 0, 0, 0];
+  else if (preset === "5/2") cycle = [1, 1, 1, 1, 1, 0, 0];
+  else {
     const seq = Number(document.getElementById("shiftSequenceInput")?.value || 3);
     const rest = Number(document.getElementById("restSequenceInput")?.value || 2);
     for (let i = 0; i < seq; i += 1) cycle.push(1);
@@ -732,16 +751,11 @@ function applyGraphPreset() {
         income: work.type === "hourly" ? Number(document.getElementById("graphHoursInput")?.value || 8) * work.hourlyRate : work.fixedRate,
         weekend: false,
       });
-      shiftsCount += 1;
     }
     cursor = new Date(cursor.getFullYear(), cursor.getMonth(), cursor.getDate() + 1);
   }
 
-  state.shifts = state.shifts.filter((shift) => {
-    const isDuplicate = generated.some((item) => item.date === shift.date);
-    return !isDuplicate;
-  });
-
+  state.shifts = state.shifts.filter((shift) => !generated.some((item) => item.date === shift.date));
   generated.forEach((shift) => state.shifts.push(shift));
   saveShifts();
   renderMainCalendar();
@@ -797,6 +811,7 @@ function bindEvents() {
     });
     saveWorks();
     renderWorksList();
+    renderHomeWorkCards();
     vibrate([20]);
   });
 
@@ -850,10 +865,11 @@ function initialize() {
   }
 
   state.selectedWorkId = state.works[0]?.id || null;
-  document.getElementById("monthLabel").textContent = formatMonthLabel(state.currentMonth);
   setTheme(state.settings.theme || "light");
   setTab("main");
+  document.getElementById("monthLabel").textContent = formatMonthLabel(state.currentMonth);
   renderMainCalendar();
+  renderHomeWorkCards();
   renderMainStats();
   renderReports();
   renderWorksList();
@@ -861,17 +877,6 @@ function initialize() {
 }
 
 initialize();
-
-window.addEventListener("DOMContentLoaded", () => {
-  document.getElementById("monthLabel").textContent = formatMonthLabel(state.currentMonth);
-});
-
-window.addEventListener("resize", () => {
-  const indicator = document.querySelector(".tab-indicator");
-  if (indicator) {
-    indicator.setAttribute("data-active", state.activeTab);
-  }
-});
 
 window.addEventListener("keydown", (event) => {
   if (event.key === "Escape") {
@@ -885,141 +890,20 @@ window.addEventListener("beforeunload", () => {
   saveSettings();
 });
 
+window.addEventListener("resize", () => {
+  const indicator = document.querySelector(".tab-indicator");
+  if (indicator && state.activeTab) {
+    const tabButtons = [...document.querySelectorAll(".tab-item")];
+    const index = tabButtons.findIndex((button) => button.dataset.tab === state.activeTab);
+    indicator.style.transform = `translateX(${index * (indicator.offsetWidth || 180)}px)`;
+  }
+});
+
 setTimeout(() => {
   const indicator = document.querySelector(".tab-indicator");
-  if (indicator) indicator.setAttribute("data-active", state.activeTab);
+  if (indicator) {
+    const tabButtons = [...document.querySelectorAll(".tab-item")];
+    const index = tabButtons.findIndex((button) => button.dataset.tab === state.activeTab);
+    indicator.style.transform = `translateX(${index * (indicator.offsetWidth || 180)}px)`;
+  }
 }, 30);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
